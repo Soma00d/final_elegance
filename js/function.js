@@ -3869,8 +3869,8 @@ $(document).ready(function (){
     function startCalibrate(subindexX, subindexY, id) {
         _MODE = "CALIBRATION";
         calibrateContainer.find(".id" + id + " .calibrate_tool").removeClass("hidden");
-        
         if (subindexX !== "null" && subindexX !== "undefined" && subindexX) {
+            
             calibrateZeroLong(subindexX, subindexY, id);
         } else {
             calibrateMinLat(subindexX, subindexY, id);
