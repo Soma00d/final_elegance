@@ -24,9 +24,22 @@
                 vertical-align:top; 
                 cursor: pointer;
             }
+            .exit_role{
+                position: absolute;
+                right: 0px;
+                top: 12px;
+                cursor: pointer;
+                width: 50px;
+                border: none;
+                box-shadow: none;
+                img{
+                    width: 100%;
+                    height: auto;
+                }
+            }
             .head_userinfo{
                 position: absolute;
-                right: 0;
+                right: 70px;
                 top: 11px;
                 .info{
                     display: inline-block;

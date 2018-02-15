@@ -682,11 +682,9 @@ $(document).ready(function (){
                                                 if (subindexX == "") {
                                                     subindexX = "null"
                                                 }
-                                                ;
                                                 if (subindexY == "") {
                                                     subindexY = "null"
                                                 }
-                                                ;
                                                 startVerifyCalibration(subindexX, subindexY, identifier);
                                             }
                                            
@@ -1020,18 +1018,22 @@ $(document).ready(function (){
                                         });
 
                                         $(".verify_calibration").on('click', function () {
-                                            var subindexX = $(this).data('long');
-                                            var subindexY = $(this).data('lat');
-                                            var identifier = $(this).data('id');
-                                            if (subindexX == "") {
-                                                subindexX = "null"
+                                            if($(this).hasClass("mushroom")){
+                                                var identifier = $(this).data('id');
+                                                var subindex = $(this).data('mush');
+                                                startVerifyCalibrationMushroom(subindex,identifier);
+                                            }else{
+                                                var subindexX = $(this).data('long');
+                                                var subindexY = $(this).data('lat');
+                                                var identifier = $(this).data('id');
+                                                if (subindexX == "") {
+                                                    subindexX = "null"
+                                                }
+                                                if (subindexY == "") {
+                                                    subindexY = "null"
+                                                }
+                                                startVerifyCalibration(subindexX, subindexY, identifier);
                                             }
-                                            ;
-                                            if (subindexY == "") {
-                                                subindexY = "null"
-                                            }
-                                            ;
-                                            startVerifyCalibration(subindexX, subindexY, identifier);
                                         });
                                         
                                         $(".stop_calibration_verif").on('click', function () {
@@ -2650,7 +2652,7 @@ $(document).ready(function (){
         
         
         var myWindow = window.open('', '', 'width=1000,height=800');
-        myWindow.document.write("<h2>PRETEST LOG RECORD - " + datetime + "</h2><div style='border:1px solid black;padding:5px;'><b>PN</b> : " + partNumber + " - <b>SN</b> : " + serialNumber + " - <b>Firmware version</b> :"+FWfctV+" - <b>Sofware version</b> :"+SWv+" - <b>User SSO</b> : " + userSSO + "<b>Node ID:</b> "+nodeID+"</div><h3>BUTTONS</h3><div>" + lineButton + "</div><h3>BUZZERS</h3><div>" + lineBuzzer + "</div><h3>BACKLIGHTS</h3><div>" + lineLed + "</div><h3>DISPLAYS</h3><div>" + lineDisplay + "</div><h3>JOYSTICKS</h3><div>" + lineJoystick + "</div>");
+        myWindow.document.write("<h2>PRETEST LOG RECORD - " + datetime + "</h2><div style='border:1px solid black;padding:5px;'><b>PN</b>: " + partNumber + " - <b>SN</b>: " + serialNumber + " - <b>Firmware version</b>: "+FWfctV+" - <b>Sofware version</b>: "+SWv+" - <b>User SSO</b>: " + userSSO + " - <b>Node ID:</b> "+nodeID+"</div><h3>BUTTONS</h3><div>" + lineButton + "</div><h3>BUZZERS</h3><div>" + lineBuzzer + "</div><h3>BACKLIGHTS</h3><div>" + lineLed + "</div><h3>DISPLAYS</h3><div>" + lineDisplay + "</div><h3>JOYSTICKS</h3><div>" + lineJoystick + "</div>");
         myWindow.document.close();
         myWindow.focus();
         myWindow.print();
@@ -3659,16 +3661,22 @@ $(document).ready(function (){
                      if(switchPosNumber == 4){
                         switch_position = "front";
                     }else{
-                        switch_position = "midde";
+                        switch_position = "left";
                     }
                      break;
                  case "10":
                     if(switchPosNumber == 4){
-                        switch_position = "3";
+                        switch_position = "right";
+                    }else{
+                        switch_position = "middle";
                     }
                     break;
                  case "18":
-                     switch_position = "4";
+                     if(switchPosNumber == 4){
+                        switch_position = "back";
+                    }else{
+                        switch_position = "right";
+                    }
                      break;
              }
              $(".position_result span").html(switch_position);

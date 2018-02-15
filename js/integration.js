@@ -26,16 +26,20 @@ $(document).ready(function(){
     $(".inge_choice").on('click', function(){
         $(".head_logo").addClass("inge_mode");
         $(".head_logo").removeClass("repair_mode");
-        $(document).find(".exit_bloc").removeClass("hidden");
+        $(".login_inge").removeClass("hidden");
+        $(".bloc.information").addClass("hidden");
+        $(document).find(".exit_role").removeClass("hidden");
     });
     $(".repair_choice").on('click', function(){
         $(".head_logo").addClass("repair_mode");
         $(".head_logo").removeClass("inge_mode");
-        $(document).find(".exit_bloc").removeClass("hidden");
+        $(".bloc.information").addClass("hidden");
+        $(document).find(".exit_role").removeClass("hidden");
     });
-    $(".exit_bloc").on('click', function(){
+    $(".exit_role").on('click', function(){
         $(this).addClass("hidden");
         $(".page_content.active").removeClass("active");
+        $(".head_userinfo").addClass("hidden");
         setTimeout(function(){
             $(document).find("#content_role").addClass("active");
         },100);
@@ -69,6 +73,7 @@ $(document).ready(function(){
             $(this).removeClass("opacity_off");
             $(".bloc_container .bloc").addClass('hidden');
             $(".bloc_container .information_finaltest").addClass('hidden');
+            $(".bloc_container .information_diag").addClass('hidden');
             $(".login_diag").removeClass("hidden");
         }
         if($(this).hasClass("history")){
@@ -85,6 +90,7 @@ $(document).ready(function(){
             $(".bloc_container .bloc").addClass('hidden');
             $(".bloc_container .information_diag").addClass('hidden');
             $(".login_finaltest").removeClass("hidden");
+            $(".bloc_container .information_diag").addClass('hidden');
         }
     });
     
