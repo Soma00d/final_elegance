@@ -5,7 +5,7 @@
 ///////////////////////////////////////////////////////////////////
 $VALEUR_hote = 'localhost';
 $VALEUR_port = '';
-$VALEUR_nom_bd = 'testbench3';
+$VALEUR_nom_bd = 'testbench';
 $VALEUR_user = 'root';
 $VALEUR_mot_de_passe = '';
 
