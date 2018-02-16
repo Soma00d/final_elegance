@@ -92,6 +92,7 @@ $(document).ready(function (){
     var SWv = "-";
     var shouldHaveSRTL;
     var modeEngineering = 0;
+    var modeManufacturing = 0;
 
     var activeSearchHistoryResult = {};
 
@@ -296,11 +297,11 @@ $(document).ready(function (){
 
 
                                             } else {
-                                                if (data[iter].type !== "joystick") {
+                                                if (data[iter].type !== "joystick" && data[iter].type !== "mushroom") {
                                                     ledContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='" + data[iter].type + "'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td'>" + data[iter].type + "</span><span class='td'>" + data[iter].description + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td test_bt' data-name='" + data[iter].description + "' data-on='" + data[iter].on_signal + "' data-off='" + data[iter].off_signal + "' data-canid='" + data[iter].can_id + "'>TEST</span></div>");
                                                 }
                                             }
-                                            if (data[iter].type == "joystick") {
+                                            if (data[iter].type == "joystick" || data[iter].type == "mushroom") {
                                                 joystickContainerNewRepair.append("<div class='new_joystick' id='id" + data[iter].id + "'><div class='name'>" + data[iter].description + "</div><div class='area_visual'><div class='area_etalon'><img class='cursor' src='images/cross_red.png'></div></div><div class='values'>x : <span class='x_val'></span> y : <span class='y_val'></span></div><div class='diag_test_bt hidden' data-id='"+data[iter].id+"' data-name='"+data[iter].symbol_name+"' data-function='" + data[iter].type + "'><div class='bt_test_ok'>OK</div><div class='bt_test_fail'>FAIL</div></div></div>");
                                             }
                                         }
@@ -364,7 +365,6 @@ $(document).ready(function (){
 
 
                                         });
-
                                         $(".totest").on('click', function () {
                                             if ($(this).hasClass("tested")) {
                                                 $(this).html("Not tested");
@@ -375,8 +375,7 @@ $(document).ready(function (){
                                                 $(this).addClass("tested");
                                                 $(this).parent().addClass("tested");
                                             }
-                                        });
-                                        
+                                        });                                        
                                         $(".bt_test_ok").on('click', function () {
                                             if ($(this).hasClass("on")) {
                                                 $(this).removeClass("on");
@@ -453,6 +452,7 @@ $(document).ready(function (){
                                     alert("No result found with this part number.")
                                 } else {
                                     modeEngineering = 0 ;
+                                    modeManufacturing = 0 ;
                                     familyName = data[0].name;
                                     var photo = data[0].photo_link;
                                     family_id = data[0].family;
@@ -718,6 +718,268 @@ $(document).ready(function (){
         }
 
     });
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////// HOMEPAGE MANUFACTURING  //////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    //CONNEXION SECTION MANUFACTURING
+    $("#send_info_login_manufacturing").on('click', function () {
+        //alert(addHexVal("00000580", nodeID));
+        userSSO = ($(".login_manufacturing #user_sso_input_manufacturing").val());
+        partNumber = ($(".login_manufacturing #part_number_input_manufacturing").val());
+        serialNumber = ($(".login_manufacturing #serial_number_input_manufacturing").val());
+
+        //definition des id
+        cobID1 = addHexVal("00000580", nodeID);
+        cobID2 = addHexVal("00000600", nodeID);
+
+        if (userSSO !== "" && partNumber !== "" && serialNumber !== "") {
+            $.ajax({
+                url: 'php/api.php?function=check_user_sso&param1=' + userSSO,
+                type: 'GET',
+                dataType: 'JSON',
+                success: function (data, statut) {
+                    userInfo = data;
+                    if (userInfo.length == 0) {
+                        alert("No result found with this SSO : " + userSSO);
+                        $("#content_homeM .information").addClass("hidden");
+                        $("#content_homeM .commentary_bloc").addClass("hidden");
+                        $("#content_homeM .information_manufacturing").addClass("hidden");
+                        $(".head_userinfo").addClass("hidden");
+                    } else if (userInfo[0].user_role == "MANU" || userInfo[0].user_role == "INGE") {
+                        $.ajax({
+                            url: 'php/api.php?function=get_tsui_repair&param1=' + partNumber,
+                            type: 'GET',
+                            dataType: 'JSON',
+                            success: function (data, statut) {
+                                if (data.length == 0) {
+                                    alert("No result found with this part number.")
+                                } else {
+                                    modeManufacturing = 1 ;
+                                    familyName = data[0].name;
+                                    var photo = data[0].photo_link;
+                                    family_id = data[0].family;
+                                    tstName = data[0].tst_name;
+                                    sectionRepair = "finaltest";
+                                    globalName = data[0].family_name;
+                                    modelName = data[0].model;
+                                    typeChoice = data[0].type;
+                                    switchNb = data[0].switch_pos_number;
+                                    hasServiceBt = data[0].has_service_bt;
+                                    shouldHaveSRTL = data[0].has_SRTL;
+                                    setInitialDisplayByModel(globalName, modelName, typeChoice);
+                                    
+                                    $(".photo_tsui").attr('src', 'images/' + photo);
+                                    $(".title_bloc.name").html(familyName);
+                                    $(".sso_user").html(userSSO);
+                                    $(".part_number").html(partNumber);
+                                    $(".serial_number").html(serialNumber);
+                                    $("#content_homeM .information").removeClass("hidden");
+                                    $("#content_homeM .information_manufacturing").removeClass("hidden");
+                                    $("#content_homeM .commentary_bloc").removeClass("hidden");
+                                    $(".head_userinfo").removeClass("hidden");
+                                    $(".head_userinfo .info .role_user").html("Manufacturing");
+                                    $(".popup_test_fw .bt_no").addClass(sectionRepair);
+                                    $(".popup_test_fw .bt_yes").addClass(sectionRepair);
+
+                                    
+                                    setGenericMessages(globalName.trim());
+                                    setTimeout(function(){
+                                        getInfoCard(globalName, cobID2);
+                                    },500);
+                                    checkSN(serialNumber);
+                                    
+                                    displayCalibrationTest(switchNb, hasServiceBt);
+                                    if(parseInt(switchNb) > 0){
+                                        fillSwitchTest(switchNb);
+                                    }
+                                }
+                                //Recupération du dictionnaire correspondant + remplissage du tableau diagnostique
+                                $.ajax({
+                                    url: 'php/api.php?function=get_dictionaries_by_id&param1=' + family_id,
+                                    type: 'GET',
+                                    dataType: 'JSON',
+                                    success: function (data, statut) {
+                                        dictionary = data;
+                                        var len = data.length;
+                                        joystickCalibrationContainer.empty();
+                                        joystickVerifyContainer.empty();
+                                        $(".joystick_container_new").empty();
+                                        
+                                        for (var iter = 0; iter < len; iter++) {
+                                            switch (data[iter].type) {
+                                                case "joystick":
+                                                    joystickCalibrationContainer.append("<div class='bloc_calibrate id" + data[iter].id + "' data-minaxis='" + data[iter].threshold_min_axis + "' data-maxaxis='" + data[iter].threshold_max_axis + "' data-minzero='" + data[iter].threshold_min_zero + "' data-maxzero='" + data[iter].threshold_max_zero + "'>"
+                                                            +"<div class='bloc_gestion_calib'>"
+                                                                + "<div class='title_jauge'>" + data[iter].description + "</div>"
+                                                                + "<div class='calibrate_bt'>"
+                                                                + "<button data-long='" + data[iter].calib_subindex_x + "' data-lat='" + data[iter].calib_subindex_y + "' data-id='" + data[iter].id + "'>Calibrate</button>"
+                                                                + "<div class='calibrate_tool hidden'>"
+                                                                + "<div class='status_calib'></div>"
+                                                                + "<div class='action_calib'></div>"
+                                                                + "<div class='validate_calib'>Validate</div>"
+                                                                + "</div>"
+                                                                + "</div>"
+                                                            +"</div>"
+                                                            +"<div class='img_calib'><img src='images/" + data[iter].photo_link + "'></div>"
+                                                            + "</div>");
+                                                    joystickVerifyContainer.append("<div class='realtime_joysticks_val id" + data[iter].id + "' data-symb='" + data[iter].symbol_name + "' data-standard='" + data[iter].standard_name + "' data-minaxis='" + data[iter].threshold_min_axis + "' data-maxaxis='" + data[iter].threshold_max_axis + "' data-minzero='" + data[iter].threshold_min_zero + "' data-maxzero='" + data[iter].threshold_max_zero + "'>"
+                                                            + "<div class='joystick_val_info'>"
+                                                            + "<div class='title_verify'>" + data[iter].description + "</div>"
+                                                            + "<button class='verify_calibration id" + data[iter].id + "' data-long='" + data[iter].calib_subindex_x + "' data-lat='" + data[iter].calib_subindex_y + "' data-id='" + data[iter].id + "'>Verify</button> "
+                                                            + "<button class='stop_calibration_verif id" + data[iter].id + " hidden' data-id='" + data[iter].id + "'>Stop</button><br><br>"
+                                                            + "<div class='bloc_pourcentage'>"
+                                                                + "<div class='title'>Final Values</div>"
+                                                                + "<div class='bloc_left_joy'>"
+                                                                + "<span class='text_config'>X : </span><span class='x_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Min X : </span><span class='minx_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Max X : </span><span class='maxx_value_joy'>0</span><br>"
+                                                                + "</div>"
+                                                                + "<div class='bloc_right_joy'>"
+                                                                + "<span class='text_config'>Y : </span><span class='y_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Min Y : </span><span class='miny_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Max Y : </span><span class='maxy_value_joy'>0</span>"
+                                                                + "</div>"                                                            
+                                                            + "</div>"
+                                                            + "<div class='bloc_raw_data'>"
+                                                                + "<div class='title'>Raw Values</div>"
+                                                                + "<div class='bloc_left_joy'>"
+                                                               + "<span class='text_config'>Zero X : </span><span class='raw_zero_x get_val'  data-descri='zero_x'>-</span><br>"
+                                                                + "<span class='text_config'>Min X : </span><span class='raw_min_x get_val'  data-descri='left'>-</span><br>"
+                                                                + "<span class='text_config'>Max X : </span><span class='raw_max_x get_val'  data-descri='right'>-</span><br>"
+                                                                + "</div>"
+                                                                + "<div class='bloc_right_joy'>"
+                                                                + "<span class='text_config'>Zero Y : </span><span class='raw_zero_y get_val' data-descri='zero_y'>-</span><br>"
+                                                                + "<span class='text_config'>Min Y : </span><span class='raw_min_y get_val' data-descri='bottom'>-</span><br>"
+                                                                + "<span class='text_config'>Max Y : </span><span class='raw_max_y get_val' data-descri='top'>-</span>"
+                                                                + "</div>"                                                            
+                                                            + "</div>"
+                                                            + "</div>"
+                                                            + "</div>");
+                                                    break;
+                                                case "mushroom":
+                                                    joystickCalibrationContainer.append("<div class='bloc_calibrate id" + data[iter].id + " mushroom' data-minaxis='" + data[iter].threshold_min_axis + "' data-maxaxis='" + data[iter].threshold_max_axis + "' data-minzero='" + data[iter].threshold_min_zero + "' data-maxzero='" + data[iter].threshold_max_zero + "'>"
+                                                            +"<div class='bloc_gestion_calib'>"
+                                                                + "<div class='title_jauge'>" + data[iter].description + "</div>"
+                                                                + "<div class='calibrate_bt'>"
+                                                                + "<button class='mushroom' data-mush='" + data[iter].calib_subindex_x + "' data-id='" + data[iter].id + "'>Calibrate</button>"
+                                                                + "<div class='calibrate_tool hidden'>"
+                                                                + "<div class='status_calib'></div>"
+                                                                + "<div class='action_calib'></div>"
+                                                                + "<div class='validate_calib'>Validate</div>"
+                                                                + "</div>"
+                                                                + "</div>"
+                                                            +"</div>"
+                                                            +"<div class='img_calib'><img src='images/" + data[iter].photo_link + "'></div>"
+                                                            + "</div>");                                                           
+                                                            
+                                                    joystickVerifyContainer.append("<div class='mushroom_verify realtime_joysticks_val id" + data[iter].id + "' data-symb='" + data[iter].symbol_name + "' data-standard='" + data[iter].standard_name + "' data-minaxis='-' data-maxaxis='-' data-minzero='-' data-maxzero='-'>"
+                                                            + "<div class='joystick_val_info'>"
+                                                            + "<div class='title_verify'>" + data[iter].description + "</div>"
+                                                            + "<button class='mushroom verify_calibration id" + data[iter].id + "' data-mush='" + data[iter].calib_subindex_x + "' data-id='" + data[iter].id + "'>Verify</button> "
+                                                            + "<button class='mushroom stop_calibration_verif id" + data[iter].id + " hidden' data-id='" + data[iter].id + "'>Stop</button><br><br>"
+                                                            + "<div class='bloc_pourcentage'>"
+                                                                + "<div class='title'>Final Values</div>"
+                                                                + "<div class='bloc_left_joy'>"
+                                                                + "<span class='text_config'>X : </span><span class='x_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Min X : </span><span class='minx_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Max X : </span><span class='maxx_value_joy'>0</span><br>"
+                                                                + "</div>"
+                                                                + "<div class='bloc_right_joy'>"
+                                                                + "<span class='text_config'>Y : </span><span class='y_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Min Y : </span><span class='miny_value_joy'>0</span><br>"
+                                                                + "<span class='text_config'>Max Y : </span><span class='maxy_value_joy'>0</span>"
+                                                                + "</div>"                                                            
+                                                            + "</div>"
+                                                            + "<div class='bloc_raw_data mushroom'>"
+                                                                + "<div class='title'>Raw Values</div>"
+                                                                + "<div class='bloc_left_joy'>"
+                                                                + "<span class='text_config'>Axis Raw X : </span><span class='axis_raw_x get_val'  data-descri='axis_raw_x'>-</span><br>"
+                                                                + "<span class='text_config'>Zero Dead X : </span><span class='zero_dead_x get_val'  data-descri='zero_dead_x'>-</span><br>"
+                                                                + "<span class='text_config'>Fix Slope X : </span><span class='fix_slope_x get_val'  data-descri='fix_slope_x'>-</span><br>"
+                                                                + "</div>"
+                                                                + "<div class='bloc_right_joy'>"
+                                                                + "<span class='text_config'>Axis Raw Y : </span><span class='axis_raw_y get_val' data-descri='axis_raw_y'>-</span><br>"
+                                                                + "<span class='text_config'>Zero Dead Y : </span><span class='zero_dead_y get_val' data-descri='zero_dead_y'>-</span><br>"
+                                                                + "<span class='text_config'>Fix Slope Y : </span><span class='fix_slope_y get_val' data-descri='fix_slope_y'>-</span><br>"
+                                                                + "</div>"                                                            
+                                                            + "</div>"
+                                                            + "</div>"
+                                                            + "</div>");
+                                                    break;
+                                            }
+                                        }                                       
+                                        
+                                        calibrateContainer.find(".calibrate_bt button").on('click', function () {
+                                            var id = $(this).data('id');
+                                            $(this).addClass("hidden");
+                                            if ($(this).hasClass('mushroom')) {
+                                                var subindex = $(this).data('mush');
+                                                startCalibrateMushroom(subindex, id);
+                                            } else {
+                                                var subindexX = $(this).data('long');
+                                                var subindexY = $(this).data('lat');
+                                                startCalibrate(subindexX, subindexY, id);
+                                            }
+
+                                        });
+                                        $(".verify_calibration").on('click', function () {
+                                            if($(this).hasClass("mushroom")){
+                                                var identifier = $(this).data('id');
+                                                var subindex = $(this).data('mush');
+                                                startVerifyCalibrationMushroom(subindex,identifier);
+                                            }else{
+                                                var subindexX = $(this).data('long');
+                                                var subindexY = $(this).data('lat');
+                                                var identifier = $(this).data('id');
+                                                if (subindexX == "") {
+                                                    subindexX = "null"
+                                                }
+                                                if (subindexY == "") {
+                                                    subindexY = "null"
+                                                }
+                                                startVerifyCalibration(subindexX, subindexY, identifier);
+                                            }
+                                           
+                                        });
+                                        $(".stop_calibration_verif").on('click', function () {
+                                            var identifier = $(this).data('id');
+                                            stopVerifyCalibration(identifier);
+                                        });
+
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        alert("This user does not have access rights for this section.");
+                        $("#content_homeM .information").addClass("hidden");
+                        $("#content_homeM .commentary_bloc").addClass("hidden");
+                        $("#content_homeM .information_manufacturing").addClass("hidden");
+                        $(".head_userinfo").addClass("hidden");
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Error while trying to access database.");
+                    $("#content_homeM .information").addClass("hidden");
+                    $("#content_homeM .commentary_bloc").addClass("hidden");
+                    $("#content_homeM .information_manufacturing").addClass("hidden");
+                    $(".head_userinfo").addClass("hidden");
+                }
+            });
+
+        } else {
+            alert("Some fields are missing");
+            $("#content_homeM .information").addClass("hidden");
+            $("#content_homeM .commentary_bloc").addClass("hidden");
+            $("#content_homeM .information_manufacturing").addClass("hidden");
+            $(".head_userinfo").addClass("hidden");
+        }
+
+    });
+
 
 
 
@@ -2766,15 +3028,15 @@ $(document).ready(function (){
 
                 lineButton += line;
             }
-            if (msg[i].fct == "led") {
+            if (msg[i].fct == "led" || msg[i].fct == "led_emergency") {
                 if (msg[i].test == "untested") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
                 }
                 if (msg[i].test == "OK") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:green'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:green'>" + msg[i].test + "</span></div>"
                 }
                 if (msg[i].test == "FAILED") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:red'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:red'>" + msg[i].test + "</span></div>"
                 }
                 lineLed += line;
             }
@@ -2790,7 +3052,7 @@ $(document).ready(function (){
                 }
                 lineBuzzer += line;
             }
-            if (msg[i].fct == "joystick") {
+            if (msg[i].fct == "joystick" || msg[i].fct == "mushroom") {
                 if (msg[i].test == "untested") {
                     var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
                 }
@@ -3383,7 +3645,7 @@ $(document).ready(function (){
         $.ajax({
             type: "POST",
             url: "php/api.php?function=save_log_final",
-            data: {jsonlog: jsonLogFinal, sn: serialNumber, pn: partNumber, sso: userSSO, nodeId:nodeID, FWfctV: FWfctV, FWcalibV: FWcalibV, SWv: SWv, enableTens: initial_enable_tens, enableFreq: initial_enable_freq, safetyTens:initial_safety_tens, safetyFreq:initial_safety_freq, alimTestbench: currGlobalVoltage, alimTsui: currTsuiVoltage, jsonCalibLog : calibLogJSON, isSRTL:SRTLfinalTest, shouldHaveSRTL:shouldHaveSRTL, initialSafetySRTL:initial_safety_srtl, initialEnableSRTL:initial_enable_srtl},
+            data: {jsonlog: jsonLogFinal, sn: serialNumber, pn: partNumber, sso: userSSO, nodeId:nodeID, FWfctV: FWfctV, FWcalibV: FWcalibV, SWv: SWv, enableTens: initial_enable_tens, enableFreq: initial_enable_freq, safetyTens:initial_safety_tens, safetyFreq:initial_safety_freq, alimTestbench: currGlobalVoltage, alimTsui: currTsuiVoltage, jsonCalibLog : calibLogJSON, isSRTL:SRTLfinalTest, shouldHaveSRTL:shouldHaveSRTL, initialSafetySRTL:initial_safety_srtl, initialEnableSRTL:initial_enable_srtl, is_manufacturing:modeManufacturing},
             success: function (msg) {
                 alert("Your log has been saved.");
                 printJsonLogFinal(jsonLogFinal, serialNumber, partNumber, userSSO, nodeID, FWfctV, FWcalibV, SWv, currGlobalVoltage, currTsuiVoltage, initial_enable_freq, initial_enable_tens, initial_safety_freq, initial_safety_tens, calibLogJSON, datetime, SRTLfinalTest, shouldHaveSRTL, initial_safety_srtl, initial_enable_srtl);
@@ -3771,9 +4033,6 @@ $(document).ready(function (){
             }
         }        
     }
-
-
-
 
 
 
@@ -5372,7 +5631,10 @@ $(document).ready(function (){
         if (activeSearchHistoryResult.length !== 0) {
             $(".history_table .content_history_table").empty();
             for (var index = 0; index < activeSearchHistoryResult.length; index++) {
-                var lineHistory = "<div class='line_history_table' data-index='" + index + "' data-type='" + activeSearchHistoryResult[index].type + "' data-id='" + activeSearchHistoryResult[index].id + "'>"
+                console.log(modeManufacturing+" "+activeSearchHistoryResult[index].role )
+                if(modeManufacturing == 1){
+                    if(activeSearchHistoryResult[index].role == "manufacturing"){
+                        var lineHistory = "<div class='line_history_table' data-index='" + index + "' data-type='" + activeSearchHistoryResult[index].type + "' data-id='" + activeSearchHistoryResult[index].id + "'>"
                         + "<span class='id_history'>" + activeSearchHistoryResult[index].id + "</span>"
                         + "<span class='pn_history'>" + activeSearchHistoryResult[index].part_number + "</span>"
                         + "<span class='sn_history'>" + activeSearchHistoryResult[index].serial_number + "</span>"
@@ -5383,7 +5645,26 @@ $(document).ready(function (){
                         + "<span class='json_history hidden'>" + activeSearchHistoryResult[index].json_log + "</span>"
                         + "<span class='jsoncalib_history hidden'>" + activeSearchHistoryResult[index].json_calib_log + "</span>"
                         + "</div>";
-                $(".history_table .content_history_table").append(lineHistory);
+                        $(".history_table .content_history_table").append(lineHistory);
+                    }                    
+                }else{                    
+                    if(activeSearchHistoryResult[index].role != "manufacturing"){
+                        var lineHistory = "<div class='line_history_table' data-index='" + index + "' data-type='" + activeSearchHistoryResult[index].type + "' data-id='" + activeSearchHistoryResult[index].id + "'>"
+                            + "<span class='id_history'>" + activeSearchHistoryResult[index].id + "</span>"
+                            + "<span class='pn_history'>" + activeSearchHistoryResult[index].part_number + "</span>"
+                            + "<span class='sn_history'>" + activeSearchHistoryResult[index].serial_number + "</span>"
+                            + "<span class='sso_history'>" + activeSearchHistoryResult[index].user_sso + "</span>"
+                            + "<span class='type_history'>" + activeSearchHistoryResult[index].type + "</span>"
+                            + "<span class='data_history'><img src='images/open_file.png'></span>"
+                            + "<span class='date_history'>" + activeSearchHistoryResult[index].date + "</span>"
+                            + "<span class='json_history hidden'>" + activeSearchHistoryResult[index].json_log + "</span>"
+                            + "<span class='jsoncalib_history hidden'>" + activeSearchHistoryResult[index].json_calib_log + "</span>"
+                            + "</div>";
+                            $(".history_table .content_history_table").append(lineHistory);
+                    }
+                }
+                
+                
             }
             generateNewHistoryJson();
             $(".line_history_table .data_history").on('click', function () {
@@ -5976,6 +6257,15 @@ $(document).ready(function (){
     });
     $(".head_logo").on('click', function(){
         _MODE = "START";
+    });
+    
+    $(".manufacturing_history_bt").on('click', function(){
+        modeManufacturing = 1;
+        $(".content_history_table").empty();
+    });
+    $(".bt_section.history").on('click', function(){
+        $(".content_history_table").empty();
+        modeManufacturing = 0;
     });
     
 

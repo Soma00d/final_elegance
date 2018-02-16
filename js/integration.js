@@ -15,22 +15,39 @@ $(document).ready(function(){
     $(".head_logo").on('click', function(){
         $(".page_content.active").removeClass("active")
         if($(this).hasClass("repair_mode")){
-            $(document).find("#content_home").addClass("active");
-            
-        }else{
-            $(document).find("#content_homeE").addClass("active");
-            
+            $(document).find("#content_home").addClass("active");            
+        }else if($(this).hasClass("inge_mode")){
+            $(document).find("#content_homeE").addClass("active");            
+        }else if($(this).hasClass("manufacturing_mode")){
+            $(document).find("#content_homeM").addClass("active");
         }
     });
     
     $(".inge_choice").on('click', function(){
         $(".head_logo").addClass("inge_mode");
         $(".head_logo").removeClass("repair_mode");
+        $(".head_logo").removeClass("manufacturing_mode");
         $(".login_inge").removeClass("hidden");
         $(".bloc.information").addClass("hidden");
         $(document).find(".exit_role").removeClass("hidden");
     });
     $(".repair_choice").on('click', function(){
+        $(".head_logo").addClass("repair_mode");
+        $(".head_logo").removeClass("inge_mode");
+        $(".head_logo").removeClass("manufacturing_mode");
+        $(".bloc.information").addClass("hidden");
+        $(document).find(".exit_role").removeClass("hidden");
+    });
+    $(".manufacturing_choice").on('click', function(){
+        $(".head_logo").addClass("manufacturing_mode");
+        $(".head_logo").removeClass("inge_mode");
+        $(".head_logo").removeClass("repair_mode");
+        $(".login_manufacturing").removeClass("hidden");
+        
+        $(".bloc.information").addClass("hidden");
+        $(document).find(".exit_role").removeClass("hidden");
+    });
+    $(".vision_choice").on('click', function(){
         $(".head_logo").addClass("repair_mode");
         $(".head_logo").removeClass("inge_mode");
         $(".bloc.information").addClass("hidden");

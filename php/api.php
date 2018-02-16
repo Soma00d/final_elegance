@@ -152,12 +152,19 @@ $saveLogFinal = function ($connexion) {
     $user_sso = $_POST['sso'];
     $pn = $_POST['pn'];
     $serial = $_POST['sn'];
-    $role = 'repair';
+    if($_POST['is_manufacturing'] == 1){
+         $role = 'manufacturing';
+    }else{
+         $role = 'repair';
+    }
+   
     $type = 'finaltest';
     $fw_fct_version = $_POST['FWfctV'];
     $fw_calib_version = $_POST['FWcalibV'];
     $sw_version = $_POST['SWv'];
-    $node_id = $_POST['nodeID'];
+    
+    if(isset($_POST['nodeID'])){$node_id = $_POST['nodeID'];}else{$node_id = "-";}
+    
     
     $alim_tsui = $_POST['alimTsui'];
     $alim_testbench = $_POST['alimTestbench'];

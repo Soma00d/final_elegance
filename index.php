@@ -63,6 +63,13 @@
             </div>
             <!------------------------------------------------->
             
+             <!-- ENGINEERING MODE ---------------------------------->
+            <div id="content_homeM" class="page_content">
+                <?php include('template/manufacturing/homepage.html'); ?>
+            </div>
+            <!------------------------------------------------->
+            
+            
             <!-- ENGINEERING MODE ---------------------------------->
             <div id="content_homeE" class="page_content">
                 <?php include('template/engineering/homepage.html'); ?>
@@ -71,7 +78,7 @@
                 <?php include('template/engineering/toolbox.html'); ?>
             </div>
             
-            <!------------------------------------------------->
+            
         </div>
         
         <div id="footer">
