@@ -39,6 +39,7 @@ if (isset($_GET["param5"])) {
 ///////////////////////////////////////////////////////////////////
 //Catalogue de fonction ///////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
+
 //retourne les infos d'un tsui en fonction du part number
 $getTsui = function ($part_number, $model, $type, $connexion) {
     if ($type != "") {
@@ -52,6 +53,7 @@ $getTsui = function ($part_number, $model, $type, $connexion) {
     return json_encode($result);
 };
 
+//retourne les infos d'un tsui en fonction du part number
 $getTsuiRepair = function ($part_number, $connexion) {
 
     $resultats = $connexion->query("SELECT * FROM tsui WHERE part_number = '$part_number' ");
@@ -243,7 +245,6 @@ $getSN = function ($serialNumber, $connexion) {
 
 //add new SN in database
 $addSN = function ($serialNumber, $connexion) {
-
     $stmt = $connexion->prepare("INSERT INTO log_sn (serial_number, date) VALUES (:serialnumber, NOW())");
     $stmt->bindParam(':serialnumber', $serialNumber);
     $stmt->execute();

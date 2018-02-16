@@ -1582,6 +1582,171 @@ $(document).ready(function (){
                                         }
                                     }
                                     break;
+                                case "mushroom":
+                                    var part0 = canData.substring(0, 2);
+                                    var part1 = canData.substring(2, 4);
+                                    var part2 = canData.substring(4, 6);
+                                    var part3 = canData.substring(6, 8);
+                                    var part4 = canData.substring(8, 10);
+                                    var part5 = canData.substring(10, 12);
+                                    var part6 = canData.substring(12, 14);
+                                    var part7 = canData.substring(14, 16);
+
+                                    if (part0 != "00") {
+                                        if (dictionary[nb].x_pos == "0") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part0) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part0) + '%');
+
+                                        }
+                                        if (dictionary[nb].y_pos == "0") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part0) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part0) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "0") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "0") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part1 != "00") {
+                                        if (dictionary[nb].x_pos == "2") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part1) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "2") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part1) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part1) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "2") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "2") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part2 != "00") {
+                                        if (dictionary[nb].x_pos == "4") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part2) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part2) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "4") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part2) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part2) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "4") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "4") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part3 != "00") {
+                                        if (dictionary[nb].x_pos == "6") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part3) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part3) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "6") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part3) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part3) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "6") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "6") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part4 != "00") {
+                                        if (dictionary[nb].x_pos == "8") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part4) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part4) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "8") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part4) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part4) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "8") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "8") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part5 != "00") {
+                                        if (dictionary[nb].x_pos == "10") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part5) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part5) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "10") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part5) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part5) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "10") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "10") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part6 != "00") {
+                                        if (dictionary[nb].x_pos == "12") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part6) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part6) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "12") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part6) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html(convertHexa(part6) + '%');
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "12") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "12") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    if (part7 != "00") {
+                                        if (dictionary[nb].x_pos == "14") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': convertHexa(part7) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html(convertHexa(part7) + '%');
+                                        }
+                                        if (dictionary[nb].y_pos == "14") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': (convertHexa(part7) * -1) + '%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values y_val').html(convertHexa(part7) + '%');
+
+                                        }
+                                    } else {
+                                        if (dictionary[nb].x_pos == "14") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'left': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .x_val').html('0%');
+                                        }
+                                        if (dictionary[nb].y_pos == "14") {
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .cursor').css({'top': '0%'});
+                                            joystickContainerNewRepair.find('#id' + dictionary[nb].id + ' .values .y_val').html('0%');
+                                        }
+                                    }
+                                    break;
                                 default:
                                 //console.log("non indentifié");
                             }
@@ -2553,6 +2718,8 @@ $(document).ready(function (){
         $(".display_test_content").addClass("hidden");
         $(".stop_test_bloc").addClass("hidden");
         $("#recap_list_t .content_recap").empty();
+        $(".continue_to_finaltest").addClass("hidden");
+        
         validateTest = 0;
         errorTestFinal = 0;
         SRTLfinalTest = 0;
@@ -3296,6 +3463,8 @@ $(document).ready(function (){
         currStandardName = finalTestEntriesTest[indexFinal]["standard_name"];
         enableF = "";
         enableT = "";
+        enableFrel = "";
+        enableTrel = "";
         
         currEnableSRTL = "0";
         currSafetySRTL = "0";
@@ -3603,8 +3772,8 @@ $(document).ready(function (){
         var isSRTL = 0;
         var enableSRTL = 0;
         var safetySRTL = 0;
-        var enableSRTLrel = 0;
-        var safetySRTLrel = 0;
+        var enableSRTLrel;
+        var safetySRTLrel;
         
         var currentdate = new Date();
         var day = currentdate.getDate(); if (String(day).length <=1){day = "0"+day};
@@ -3742,7 +3911,7 @@ $(document).ready(function (){
                     } else {
                         var enablefreqrel = ""
                     }
-                }                
+                }               
                 
                 if (msg[i].is_enable == 0) {
                     msg[i].is_enable = "N"
