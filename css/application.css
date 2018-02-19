@@ -1680,7 +1680,7 @@ and open the template in the editor.
 }
 /* line 174, ../sass/_toolbox.scss */
 #dialog-spybox .head_line .candata_head {
-  width: 150px;
+  width: 200px;
   color: green;
 }
 /* line 178, ../sass/_toolbox.scss */
@@ -1705,7 +1705,7 @@ and open the template in the editor.
 }
 /* line 194, ../sass/_toolbox.scss */
 #dialog-spybox .content_line .can_data_spy {
-  width: 150px;
+  width: 200px;
 }
 /* line 197, ../sass/_toolbox.scss */
 #dialog-spybox .content_line .nb {
