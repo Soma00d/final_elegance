@@ -287,8 +287,8 @@ $(document).ready(function (){
                                         buttonContainer.empty();
                                         ledContainer.empty();
                                         for (var iter = 0; iter < len; iter++) {
-                                            if (data[iter].type == "button") {
-                                                if (data[iter].is_led == "1") {
+                                            if (data[iter].type == "button" && (data[iter].pressed_val != "" && data[iter].released_val != "")) {
+                                                if (data[iter].is_led == "1" ) {
                                                     ledContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='led'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td'>led</span><span class='td'>" + data[iter].description + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td test_bt' data-name='" + data[iter].description + "' data-on='" + data[iter].on_signal + "' data-off='" + data[iter].off_signal + "' data-canid='" + data[iter].can_id + "'>TEST</span></div>");
                                                 } else if (data[iter].is_led == "2") {
                                                     ledContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='led_emergency'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td'>led</span><span class='td'>" + data[iter].description + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td test_bt' data-name='" + data[iter].description + "' data-on='" + data[iter].on_signal + "' data-off='" + data[iter].off_signal + "' data-function='led_emergency' data-canid='" + data[iter].can_id + "'>TEST</span></div>");
@@ -297,7 +297,7 @@ $(document).ready(function (){
 
 
                                             } else {
-                                                if (data[iter].type !== "joystick" && data[iter].type !== "mushroom") {
+                                                if (data[iter].type !== "joystick" && data[iter].type !== "mushroom" && data[iter].type !== "button" ) {
                                                     ledContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='" + data[iter].type + "'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td'>" + data[iter].type + "</span><span class='td'>" + data[iter].description + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td test_bt' data-name='" + data[iter].description + "' data-on='" + data[iter].on_signal + "' data-off='" + data[iter].off_signal + "' data-canid='" + data[iter].can_id + "'>TEST</span></div>");
                                                 }
                                             }
@@ -3379,7 +3379,7 @@ $(document).ready(function (){
             }else{
                 setTimeout(function(){
                     sendSignal(startNodeMsg);                    
-                },5000)    
+                },10000)    
             }
             setTimeout(function () {
                 if(hasSRTL == 1) {
@@ -3445,7 +3445,7 @@ $(document).ready(function (){
                 $("#testfinal_container").removeClass("hidden");
                 $("#user_wait").addClass("hidden");
             }
-        }, 6000);
+        }, 11000);
     }
 
     //Affichage du test final en cours
@@ -3685,7 +3685,7 @@ $(document).ready(function (){
                         displayFinalTest(indexFinal);
                         $("#user_wait").addClass("hidden");
                         $("#testfinal_container").removeClass("hidden");
-                    },5000)
+                    },11000)
                 }
             }else{
                 displayFinalTest(indexFinal);
