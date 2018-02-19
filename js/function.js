@@ -3221,25 +3221,25 @@ $(document).ready(function (){
             }
             if (msg[i].fct == "joystick" || msg[i].fct == "mushroom") {
                 if (msg[i].test == "untested") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
                 }
                 if (msg[i].test == "OK") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:green'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:green'>" + msg[i].test + "</span></div>"
                 }
                 if (msg[i].test == "FAILED") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:red'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:red'>" + msg[i].test + "</span></div>"
                 }
                 lineJoystick += line;
             }
             if (msg[i].fct == "display") {
                 if (msg[i].test == "untested") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:orange'>" + msg[i].test + "</span></div>"
                 }
                 if (msg[i].test == "OK") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:green'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:green'>" + msg[i].test + "</span></div>"
                 }
                 if (msg[i].test == "FAILED") {
-                    var line = "<div><span style='width:100px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:red'>" + msg[i].test + "</span></div>"
+                    var line = "<div><span style='width:150px;display:inline-block;'>" + msg[i].name + "</span> = <span style='color:red'>" + msg[i].test + "</span></div>"
                 }
                 lineDisplay += line;
             }
