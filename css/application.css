@@ -3990,3 +3990,27 @@ body {
   margin-right: auto;
   margin-top: 300px;
 }
+
+/* line 145, ../sass/_global.scss */
+.warning_firmware {
+  padding: 5px;
+  border: 2px solid orange;
+  border-radius: 5px;
+  width: 515px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  position: relative;
+}
+/* line 156, ../sass/_global.scss */
+.warning_firmware img {
+  width: 32px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 15px;
+  position: absolute;
+  top: -16px;
+  left: -16px;
+}

@@ -6479,6 +6479,10 @@ $(document).ready(function (){
             resetDisplayCalibration(hasServiceBt, switchPosNumber);
         }
     });
+    $(".exit_role").on('click', function(){
+        _MODE = "START";        
+        resetDisplayCalibration(hasServiceBt, switchPosNumber);        
+    });
     
     $(".manufacturing_history_bt").on('click', function(){
         modeManufacturing = 1;
