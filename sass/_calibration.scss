@@ -151,7 +151,7 @@
             &.blink_me {
                 animation: blinker 1s linear infinite;
             }
-            @keyframes blinker {  
+            @keyframes blinker {   
                 50% { 
                     border: 2px solid #3b73b9 ;
                     background : #f7d2aa;

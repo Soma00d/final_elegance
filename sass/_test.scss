@@ -99,6 +99,15 @@
         display:inline-block;
         vertical-align:top;
         text-align:center;
+        &.symbol_name{
+            width:70px;
+        }
+        &.description{
+            width:210px;
+        }
+        &.type{
+            width:70px;
+        }
     }
     .symbol_name{
         font-weight:bold;

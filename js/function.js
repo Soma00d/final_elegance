@@ -293,7 +293,7 @@ $(document).ready(function (){
                                                 } else if (data[iter].is_led == "2") {
                                                     ledContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='led_emergency'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td'>led</span><span class='td'>" + data[iter].description + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td test_bt' data-name='" + data[iter].description + "' data-on='" + data[iter].on_signal + "' data-off='" + data[iter].off_signal + "' data-function='led_emergency' data-canid='" + data[iter].can_id + "'>TEST</span></div>");
                                                 }
-                                                buttonContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='" + data[iter].type + "'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td'>" + data[iter].type + "</span><span class='td'>" + data[iter].description + "</span><span class='td press'>" + data[iter].pressed_val + "</span><span class='td rel'>" + data[iter].released_val + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td totest'>Not tested</span></div>");
+                                                buttonContainer.append("<div class='line id" + data[iter].id + "' data-id='" + data[iter].id + "' data-name='" + data[iter].symbol_name + "' data-function='" + data[iter].type + "'><span class='td symbol_name'>" + data[iter].symbol_name + "</span><span class='td type'>" + data[iter].type + "</span><span class='td description'>" + data[iter].description + "</span><span class='td press'>" + data[iter].pressed_val + "</span><span class='td rel'>" + data[iter].released_val + "</span><span class='td photo_piece'><img src='images/" + data[iter].photo_link + "'></span><span class='td totest'>Not tested</span></div>");
 
 
                                             } else {
@@ -1245,8 +1245,10 @@ $(document).ready(function (){
                                                 diagInge.find(".switch img").attr('src', 'images/switch_off.png');
                                                 $(this).removeClass("activated");
                                                 sendSignal(postSignal + dlcCompletionSignal + offSignal);
+                                                stopAllLED(globalName, modelName, typeChoice);
                                                 clearInterval(intervalSpe);
                                             } else {
+                                                stopAllLED(globalName, modelName, typeChoice);
                                                 diagInge.find(".switch img").attr('src', 'images/switch_off.png');
                                                 $(this).find("img").attr('src', 'images/switch_on.png');
                                                 $(this).addClass("activated");
@@ -2842,6 +2844,8 @@ $(document).ready(function (){
                 $(".bad_calibration").removeClass("hidden");   
                 
             }else if(modelName == "SMARTBOX" && typeChoice == "AGILA"){
+                $(".warning_firmware").append("<br><br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted<br>AGV Move In/Out : X axis inverted")
+                
                 $(".switch_calibration").removeClass("hidden");
                 
                 $(".srtl_container").removeClass("hidden");
@@ -2859,6 +2863,7 @@ $(document).ready(function (){
                 $(".start_agila_bt").removeClass("hidden"); 
                 $(".tsui_restart_bt").removeClass("hidden"); 
             }else{
+                $(".warning_firmware").append("<br><br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted")
                 $(".switch_calibration").removeClass("hidden");
                 
                 $(".srtl_container").removeClass("hidden");
@@ -2877,6 +2882,45 @@ $(document).ready(function (){
         }
         
         
+    }
+    
+    function resetDisplayCalibration(hasServiceBt,switchPosNumber){
+        
+        $(".commentary_bloc").addClass("hidden");
+        $(".information_finaltest").addClass("hidden");
+        $(".information_manufacturing").addClass("hidden");
+        
+        if(hasServiceBt == 0 && switchPosNumber == 0){
+            $(".calibration_step_2").removeClass("hidden");
+            $(".calibration_step_1").addClass("hidden");
+            $(".continue_to_finaltest").addClass("hidden");
+            $(".statut_calibration_verif").addClass("hidden");
+            $(".statut_calibration_verif").empty();
+        }else if(hasServiceBt == 0 && switchPosNumber > 0){
+            $(".calibration_step_2").addClass("hidden");
+            $(".calibration_step_1").removeClass("hidden");
+            $(".repair_calib_section_serv").addClass("hidden");
+            $(".repair_calib_section_switch").removeClass("hidden");
+            $(".continue_to_finaltest").addClass("hidden");
+            $(".statut_calibration_verif").addClass("hidden");
+            $(".statut_calibration_verif").empty();
+            $(".switch_line_test").each(function(){
+                $(this).removeClass("test_ok");
+                $(this).removeClass("test_fail");
+            })
+        }else if(hasServiceBt > 0 && switchPosNumber == 0){
+            $(".calibration_step_2").addClass("hidden");
+            $(".calibration_step_1").removeClass("hidden");
+            $(".repair_calib_section_serv").removeClass("hidden");
+            $(".repair_calib_section_switch").addClass("hidden");
+            $(".continue_to_finaltest").addClass("hidden");
+            $(".statut_calibration_verif").addClass("hidden");
+            $(".statut_calibration_verif").empty();
+            $(".switch_line_serv").each(function(){
+                $(this).removeClass("test_ok");
+                $(this).removeClass("test_fail");
+            })
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3394,7 +3438,7 @@ $(document).ready(function (){
                     //alert(initial_safety_tens+" "+initial_safety_freq)
                     SRTLfinalTest = 0;
                 }
-            }, 4500);
+            }, 10500);
             
         }else if(globalName == "OMEGA"){
             if(modelName == "TSSC"){
@@ -3914,12 +3958,12 @@ $(document).ready(function (){
                 }               
                 
                 if (msg[i].is_enable == 0) {
-                    msg[i].is_enable = "N"
+                    msg[i].is_enable = "-"
                 } else {
                     msg[i].is_enable = "Y"
                 }                
                 if (msg[i].is_cdrh == 0) {
-                    msg[i].is_cdrh = "N"
+                    msg[i].is_cdrh = "-"
                 } else {
                     msg[i].is_cdrh = "Y"
                 }
@@ -3957,12 +4001,12 @@ $(document).ready(function (){
                     }
                 }
                 if (msg[i].is_safety == 0) {
-                    msg[i].is_safety = "N"
+                    msg[i].is_safety = "-"
                 } else {
                     msg[i].is_safety = "Y"
                 }
                 if (msg[i].is_cdrh == 0) {
-                    msg[i].is_cdrh = "N"
+                    msg[i].is_cdrh = "-"
                 } else {
                     msg[i].is_cdrh = "Y"
                 }
@@ -3973,26 +4017,26 @@ $(document).ready(function (){
             }
             if (msg[i].type == "led") {
                 if (msg[i].is_enable == 0) {
-                    msg[i].is_enable = "N"
+                    msg[i].is_enable = "-";
                 } else {
-                    msg[i].is_enable = "Y"
+                    msg[i].is_enable = "Y";
                 }
                 if (msg[i].is_cdrh == 0) {
-                    msg[i].is_cdrh = "N"
+                    msg[i].is_cdrh = "-";
                 } else {
-                    msg[i].is_cdrh = "Y"
+                    msg[i].is_cdrh = "Y";
                 }
                 var line = "<div><span style='display:inline-block;vertical-align:top;width:75px;margin-left:5px;'>" + msg[i].name + "</span><span style='display:inline-block;vertical-align:top;width:100px;margin-left:5px;'>" + msg[i].standard_name + "</span><span style='display:inline-block;vertical-align:top;width:100px;margin-left:5px;'>" + msg[i].result + "</span><span style='display:inline-block;vertical-align:top;width:100px;margin-left:5px;'>" + msg[i].is_cdrh + "</span></div>"
                 lineLed += line;
             }
             if (msg[i].type == "display") {
                 if (msg[i].is_enable == 0) {
-                    msg[i].is_enable = "N"
+                    msg[i].is_enable = "-";
                 } else {
-                    msg[i].is_enable = "Y"
+                    msg[i].is_enable = "Y";
                 }
                 if (msg[i].is_cdrh == 0) {
-                    msg[i].is_cdrh = "N"
+                    msg[i].is_cdrh = "-";
                 } else {
                     msg[i].is_cdrh = "Y"
                 }
@@ -4001,12 +4045,12 @@ $(document).ready(function (){
             }
             if (msg[i].type == "buzzer") {
                 if (msg[i].is_enable == 0) {
-                    msg[i].is_enable = "N"
+                    msg[i].is_enable = "-"
                 } else {
                     msg[i].is_enable = "Y"
                 }
                 if (msg[i].is_cdrh == 0) {
-                    msg[i].is_cdrh = "N"
+                    msg[i].is_cdrh = "-"
                 } else {
                     msg[i].is_cdrh = "Y"
                 }
@@ -4015,12 +4059,12 @@ $(document).ready(function (){
             }
             if (msg[i].type == "joystick") {
                 if (msg[i].is_enable == 0) {
-                    msg[i].is_enable = "N"
+                    msg[i].is_enable = "-"
                 } else {
                     msg[i].is_enable = "Y"
                 }
                 if (msg[i].is_cdrh == 0) {
-                    msg[i].is_cdrh = "N"
+                    msg[i].is_cdrh = "-"
                 } else {
                     msg[i].is_cdrh = "Y"
                 }
@@ -4060,16 +4104,23 @@ $(document).ready(function (){
         
         var lineInitial ="";
         if(shouldHaveSRTL == 0 || shouldHaveSRTL == "0"){
-            lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Measured Value</b></span></div>"
-                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_freq+"Hz</span></div>"
-                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_tens+"V</span></div>"
-                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_freq+"Hz</span></div>"
-                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_tens+"V</span></div>";
+            if(initial_enable_freq == 0){var testResultInitialEnableFreq = "Pass"}else{var testResultInitialEnableFreq = "Fail"}
+            if(initial_enable_tens == 0){var testResultInitialEnableTens = "Pass"}else{var testResultInitialEnableTens = "Fail"}
+            if(initial_safety_freq >= 1800 && initial_safety_freq <= 2200){var testResultInitialSafetyFreq = "Pass"}else{var testResultInitialSafetyFreq = "Fail"}
+            if(initial_safety_tens >= 22.6 && initial_safety_tens <= 26.4){var testResultInitialSafetyTens = "Pass"}else{var testResultInitialSafetyTens = "Fail"}
+            if(initial_enable_srtl == 0 ){var testInitialSRTLenable = "Pass"}else{var testInitialSRTLenable = "Fail"}
+            if(initial_safety_srtl == 0 ){var testInitialSRTLsafety = "Pass"}else{var testInitialSRTLsafety = "Fail"}
+            
+            lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Measured Value</b><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>LSL</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>USL</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Pass/Fail</b></span></div>"
+                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_freq+"Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialEnableFreq+"</span></div>"
+                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_tens+"V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialEnableTens+"</span></div>"
+                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_freq+"Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>1800Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>2200Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialSafetyFreq+"</span></div>"
+                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_tens+"V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>22.6V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>26.4V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialSafetyTens+"</span></div>";
         }else{
-            lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Value</b></span></div>"
+            lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Value</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Required Value</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Pass/Fail</b></span></div>"
             + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Test SRTL</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+SRTLfinalTesttxt+"</span></div>"
-            + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable SRTL</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_srtl+"</span></div>"
-            + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety SRTL</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_srtl+"</span></div>"
+            + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable SRTL</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_srtl+"</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testInitialSRTLenable+"</span></div>"
+            + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety SRTL</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_srtl+"</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testInitialSRTLsafety+"</span></div>"
         }
         
         var myWindow = window.open('', '', 'width=1000,height=800');
@@ -5061,6 +5112,7 @@ $(document).ready(function (){
     });
     $(".continue_to_finaltest").on('click', function () {
         sendSignal(Cal_post + Cal_dlc + cobID2 + "2f00550101000000");
+        FWcalibV = $(".sw_config").html();
         getCalibrationLog();
     });
     
@@ -6123,6 +6175,12 @@ $(document).ready(function (){
 
     $(".start_node_bt").on('click', function () {
         sendSignal(startNodeMsg);
+        if(typeChoice == "AGILA"){
+            setTimeout(function(){
+                var sign = "002400806d68d7551407f09b861e3aad000549a844080000" + cobID2 + "2f01300101000000";
+                sendSignal(sign);
+            },100)                    
+        }
     });
     $(".stop_node_bt").on('click', function () {
         sendSignal(stopNodeMsg);
@@ -6154,32 +6212,9 @@ $(document).ready(function (){
             }
         }
     });
-    $(".stop_all_bt").on('click', function () {
-        if (familyChoice === "ELEGANCE" && modelChoice === "TSSC") {
-            // pour TSSC ELEGANCE
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002280000000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000003280000000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000004280000000000000000");
-        } else if (familyChoice === "ELEGANCE" && modelChoice === "SMARTBOX" && typeChoice === "AGILA") {
-            // pour SB TYPE AGIlA
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200300000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200200000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200100000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200500000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000004200000000000000000"); //AGILA CONF ONLY
-        } else if (familyChoice === "ELEGANCE" && modelChoice === "SMARTBOX" && typeChoice === "OTHER") {
-            // pour SB TYPE OTHER
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200300000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200200000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200100000000000000");
-        }else if(globalName == "OMEGA"){
-            if(modelName == "TSSC"){
-                
-            }else{
-                sendSignal("002400806d68d7551407f09b861e3aad000549a84401000006c422500000000000000000");
-                sendSignal("002400806d68d7551407f09b861e3aad000549a84401000006e422500000000000000000");
-            }
-        }
+    $(".stop_all_bt").on('click', function () {        
+        stopAllLED(globalName, modelName, typeChoice);
+        
     });
     $(".start_agila_bt").on('click', function () {
         sendSignal("002400806d68d7551407f09b861e3aad000549a844080000" + cobID2 + "2F01300101000000");
@@ -6258,6 +6293,11 @@ $(document).ready(function (){
         }
     });
     $("#content_toolbox .show_button").on('click', function () {
+        stopAllLED(globalName, modelName, typeChoice);
+        $(".switch").each(function(){
+            $(this).removeClass('activated');
+            $(this).find('img').attr('src','images/switch_off.png');
+        })
         $("#content_toolbox .diag_inge .joystick_show").fadeOut(300);
         $("#content_toolbox .diag_inge .led_show").fadeOut(300);
         setTimeout(function () {
@@ -6426,6 +6466,9 @@ $(document).ready(function (){
     });
     $(".head_logo").on('click', function(){
         _MODE = "START";
+        if($(this).hasClass("repair_mode") || $(this).hasClass("manufacturing_mode")){
+            resetDisplayCalibration(hasServiceBt, switchPosNumber);
+        }
     });
     
     $(".manufacturing_history_bt").on('click', function(){
@@ -6437,7 +6480,33 @@ $(document).ready(function (){
         modeManufacturing = 0;
     });
     
-
+    function stopAllLED(globalName, modelName, typeChoice){
+        if (globalName === "ELEGANCE" && modelName === "TSSC") {
+            // pour TSSC ELEGANCE
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002280000000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000003280000000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000004280000000000000000");
+        } else if (globalName === "ELEGANCE" && modelName === "SMARTBOX" && typeChoice === "AGILA") {
+            // pour SB TYPE AGIlA
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200300000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200200000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200100000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200500000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000004200000000000000000"); //AGILA CONF ONLY
+        } else if (globalName === "ELEGANCE" && modelName === "SMARTBOX" && typeChoice === "OTHER") {
+            // pour SB TYPE OTHER
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200300000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200200000000000000");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a844080000000002200100000000000000");
+        }else if(globalName == "OMEGA"){
+            if(modelName == "TSSC"){
+                
+            }else{
+                sendSignal("002400806d68d7551407f09b861e3aad000549a84401000006c422500000000000000000");
+                sendSignal("002400806d68d7551407f09b861e3aad000549a84401000006e422500000000000000000");
+            }
+        }
+    }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////// SEND SIGNAL TO DRIVER ////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
