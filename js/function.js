@@ -2781,7 +2781,8 @@ $(document).ready(function (){
         $(".joystick_container_new").empty();
         $(".calibration_zone_container").empty();
         $(".calibration_test_container").empty();
-        
+        $(".warning_firmware.inverted .content").empty();
+        $(".warning_firmware.inverted").addClass("hidden");
         $(".diag_inge .diag_component").each(function () {
             $(this).remove();
         });    
@@ -2844,7 +2845,8 @@ $(document).ready(function (){
                 $(".bad_calibration").removeClass("hidden");   
                 
             }else if(modelName == "SMARTBOX" && typeChoice == "AGILA"){
-                $(".warning_firmware").append("<br><br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted<br>AGV Move In/Out : X axis inverted")
+                $(".warning_firmware.inverted").removeClass("hidden");
+                $(".warning_firmware.inverted .content").append("<br><br><b>With default switch position LEFT</b> :<br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted<br>AGV Move In/Out : X axis inverted")
                 
                 $(".switch_calibration").removeClass("hidden");
                 
@@ -2863,7 +2865,8 @@ $(document).ready(function (){
                 $(".start_agila_bt").removeClass("hidden"); 
                 $(".tsui_restart_bt").removeClass("hidden"); 
             }else{
-                $(".warning_firmware").append("<br><br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted")
+                $(".warning_firmware.inverted").removeClass("hidden");
+                $(".warning_firmware.inverted .content").append("<br><br><b>With default switch position LEFT</b> :<br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted")
                 $(".switch_calibration").removeClass("hidden");
                 
                 $(".srtl_container").removeClass("hidden");
@@ -2888,7 +2891,9 @@ $(document).ready(function (){
         
         $(".commentary_bloc").addClass("hidden");
         $(".information_finaltest").addClass("hidden");
+        $(".bloc.information").addClass("hidden");
         $(".information_manufacturing").addClass("hidden");
+        $(".information_diag").addClass("hidden");
         
         if(hasServiceBt == 0 && switchPosNumber == 0){
             $(".calibration_step_2").removeClass("hidden");
@@ -3538,7 +3543,7 @@ $(document).ready(function (){
         var postSignal = "002400806d68d7551407f09b861e3aad000549a844080000";
         currSignalStart = postSignal + currOnSignal;
         currSignalStop = postSignal + currOffSignal;
-
+        $("#content_finaltest .warning_firmware.inverted").addClass("hidden");
 
         switch (currType) {
             case "button":
@@ -3638,6 +3643,10 @@ $(document).ready(function (){
                 var y_pos = finalTestEntriesTest[indexFinal]["y_pos"].trim();
                 progressBarFinalInside.css('width', pourcentage + '%');
                 progressBarFinal.html(pourcentage + '%');
+                if(globalName == "ELEGANCE" && modelName == "SMARTBOX"){
+                    $("#content_finaltest .warning_firmware.inverted").removeClass("hidden");
+                }
+                
                 if (x_pos != "" && y_pos != "") {
                     waitingXpos = x_pos;
                     waitingYpos = y_pos;
@@ -4111,7 +4120,7 @@ $(document).ready(function (){
             if(initial_enable_srtl == 0 ){var testInitialSRTLenable = "Pass"}else{var testInitialSRTLenable = "Fail"}
             if(initial_safety_srtl == 0 ){var testInitialSRTLsafety = "Pass"}else{var testInitialSRTLsafety = "Fail"}
             
-            lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Measured Value</b><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>LSL</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>USL</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Pass/Fail</b></span></div>"
+            lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Measured Value</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>LSL</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>USL</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Pass/Fail</b></span></div>"
                 + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_freq+"Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialEnableFreq+"</span></div>"
                 + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_tens+"V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialEnableTens+"</span></div>"
                 + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_freq+"Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>1800Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>2200Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialSafetyFreq+"</span></div>"
