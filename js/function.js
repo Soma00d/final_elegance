@@ -2092,6 +2092,12 @@ $(document).ready(function (){
                         tsuiVoltage = (convertHexaPic(tsuiVoltage)+3) / 51 / 0.1375;
                         hasSRTL = has_SRTL;
                         
+                        if(hasSRTL == 1){
+                            $(".srtl_container .srtl").attr('src', 'images/switch_on.png')  
+                        }else{
+                            $(".srtl_container .srtl").attr('src', 'images/switch_off.png')  
+                        }
+                        
                         if(counterDisplayFreqTens == 20){
                             safetyFreqContainer.html(safetyFrequency);
                             safetyVoltContainer.html(safetyVoltage.toFixed(2));
@@ -2894,7 +2900,14 @@ $(document).ready(function (){
         $(".bloc.information").addClass("hidden");
         $(".information_manufacturing").addClass("hidden");
         $(".information_diag").addClass("hidden");
-        
+        $(".serv_line_test").each(function(){
+            $(this).removeClass("test_ok");
+            $(this).removeClass("test_fail");
+        })
+        $(".switch_line_test").each(function(){
+            $(this).removeClass("test_ok");
+            $(this).removeClass("test_fail");
+        })
         if(hasServiceBt == 0 && switchPosNumber == 0){
             $(".calibration_step_2").removeClass("hidden");
             $(".calibration_step_1").addClass("hidden");
