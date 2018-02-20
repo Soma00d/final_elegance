@@ -4014,3 +4014,7 @@ body {
   top: -16px;
   left: -16px;
 }
+/* line 165, ../sass/_global.scss */
+.warning_firmware.inverted {
+  margin-top: 20px;
+}

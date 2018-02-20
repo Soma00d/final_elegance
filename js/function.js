@@ -253,7 +253,8 @@ $(document).ready(function (){
                                     typeChoice = data[0].type;
                                     sectionRepair = "diagnostic";
                                     globalName = data[0].family_name;
-
+                                    setInitialDisplayByModel(globalName, modelName, typeChoice);
+                                    
                                     $(".photo_tsui").attr('src', 'images/' + photo);
                                     $(".title_bloc.name").html(familyName);
                                     $(".sso_user").html(userSSO);
@@ -2852,7 +2853,7 @@ $(document).ready(function (){
                 
             }else if(modelName == "SMARTBOX" && typeChoice == "AGILA"){
                 $(".warning_firmware.inverted").removeClass("hidden");
-                $(".warning_firmware.inverted .content").append("<br><br><b>With default switch position LEFT</b> :<br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted<br>AGV Move In/Out : X axis inverted")
+                $(".warning_firmware.inverted .content").append("<b>With default switch position LEFT</b> :<br><br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted<br>AGV Move In/Out : X axis inverted")
                 
                 $(".switch_calibration").removeClass("hidden");
                 
@@ -2872,7 +2873,7 @@ $(document).ready(function (){
                 $(".tsui_restart_bt").removeClass("hidden"); 
             }else{
                 $(".warning_firmware.inverted").removeClass("hidden");
-                $(".warning_firmware.inverted .content").append("<br><br><b>With default switch position LEFT</b> :<br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted")
+                $(".warning_firmware.inverted .content").append("<b>With default switch position LEFT</b> :<br><br> Table Panning Mushroom : X axis inverted<br>Table Tilt/Lift Joystick : Y axis inverted")
                 $(".switch_calibration").removeClass("hidden");
                 
                 $(".srtl_container").removeClass("hidden");
