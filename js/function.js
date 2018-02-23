@@ -5511,7 +5511,7 @@ $(document).ready(function (){
 
     //fonction récursive d'envoi de l'intégralité des lignes du fichier
     function coreDownload(canId, startIndex) {
-        if (startIndex < arrayOfLines.length - 1) {
+        if ((startIndex < arrayOfLines.length - 1) && isDownloading == 1) {
             lineDownloading = startIndex;
             if (arrayOfLines[startIndex].substring(0, 1) == "+") {
                 var lengthFirstLine = arrayOfLines[0].length - 1;
@@ -5566,7 +5566,7 @@ $(document).ready(function (){
     }
     function coreDownloadOmega(startIndex) {
         console.log("------------ core download index " + startIndex + " count: " + msgCount + " ----------------");
-        if (startIndex < arrayOfLines.length) {
+        if ((startIndex < arrayOfLines.length) && isDownloading == 1) {
             lineDownloading = startIndex;
             if (arrayOfLines[startIndex].substring(7, 9) == "00") {
                 var lineDataLengthHex = arrayOfLines[startIndex].substring(1, 3);
