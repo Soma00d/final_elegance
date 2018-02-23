@@ -11,6 +11,10 @@ $(document).ready(function () {
     var contentArrayAlllogs = $(".adm_logs_container .array_all_logs .content_array_logs");
     var contentArrayAllSerial = $(".adm_serial_container .array_all_sn .content_array_sn");
     
+    var contentArrayDicoButton = $(".dictionary_type_listing.bouton-type .content_new_dico");
+    var contentArrayDicoJoystick = $(".dictionary_type_listing.joystick-type .content_new_dico");
+    var contentArrayDicoDisplay = $(".dictionary_type_listing.display-type .content_new_dico");
+    
     var updateUserBox = $(".adm_all_user_container .overlay_udpdate .update_user_box");
     var createUserBox = $(".adm_all_user_container .overlay_create .create_user_box");
     
@@ -643,6 +647,121 @@ $(document).ready(function () {
 
     };
 
+
+    //============================================================================//
+    //                              DICTIONARIES ADMIN                            //
+    //============================================================================//
+
+    $(".type-entry").on('click', function(){
+        var _this = $(this);
+        $(".dico_step2 .dictionary_type_listing").fadeOut(300);
+        $(".dico_step2 .type-entry").each(function(){
+            $(this).removeClass("selected");
+        });
+        setTimeout(function(){
+            if(_this.hasClass("entry-bt")){
+                _this.addClass("selected");
+                $(".dico_step2 .dictionary_type_listing.bouton-type").fadeIn(300);
+            }
+            else if(_this.hasClass("entry-joy")){
+                _this.addClass("selected");
+                $(".dico_step2 .dictionary_type_listing.joystick-type").fadeIn(300);
+            }
+            else{
+                _this.addClass("selected");
+                $(".dico_step2 .dictionary_type_listing.display-type").fadeIn(300);
+            }
+        },300)
+        
+    });
+    
+    
+    $(".bt_send_dico_form.step1").on('click', function(){
+        var newID = $(".new_id_dico_input").val().trim();
+        var description = $(".new_description_dico_input").val().trim();
+        var refID = $(".model_ref_selector option:selected").val();
+        var refFamily = $(".model_ref_selector option:selected").data('family');
+        var refModel = $(".model_ref_selector option:selected").data('model');
+        var refType = $(".model_ref_selector option:selected").data('type');        
+        
+        if(newID != "" && description != ""){
+            $(".step1 .error_form_text").html("");
+            $(".dico_form.step1").removeClass("error");  
+            checkNewID(newID, description, refID, refFamily, refModel, refType);
+        }else{
+            $(".step1 .error_form_text").html("Some fields are missing.");
+            $(".dico_form.step1").addClass("error");
+        }        
+    });
+    
+    function checkNewID(newID, description, refID, refFamily, refModel, refType){
+       $.ajax({
+            url: '../php/api.php?function=check_new_id',
+            type: 'POST',
+            dataType: 'JSON',
+            data:{newID:newID},
+            success: function (data, statut) {
+                if (data.length == 0) {
+                    launchStep2(newID, description, refID, refFamily, refModel, refType);
+                }else {
+                    $(".step1 .error_form_text").html("This ID already exists and can't be added.");
+                    $(".dico_form.step1").addClass("error");
+                }
+            }
+        });
+    }
+    
+    function launchStep2(newID, description, refID, refFamily, refModel, refType){
+        $(".dico_step1").fadeOut(500);
+        $(".dico_step2 .presentation .newID").html(newID);
+        $(".dico_step2 .presentation .description_new_dico").html(description);
+        $(".dico_step2 .presentation .ref_model").html(refFamily+ " "+refModel+" "+refType);        
+        $.ajax({
+            url: '../php/api.php?function=get_dictionaries_by_id&param1='+refID,
+            type: 'GET',
+            dataType: 'JSON',
+            data:{},
+            success: function (data, statut) {
+                if (data.length == 0) {
+                    alert("error");
+                }else {
+                    console.log(data);
+                    for(var i=0; i< data.length; i++){
+                        if(data[i].is_safety == 1){var isSafety = "<img src='../images/check_admin.png'>"}else{var isSafety = "-"}
+                        if(data[i].is_enable == 1){var isEnable = "<img src='../images/check_admin.png'>"}else{var isEnable = "-"}
+                        if(data[i].is_cdrh == 1){var isCDRH = "<img src='../images/check_admin.png'>"}else{var isCDRH = "-"}
+                        if(data[i].is_led == 1){var isLED = "<img src='../images/check_admin.png'>"}else{var isLED = "-"}
+                        if(data[i].is_final == 1){var isFinal = "<img src='../images/check_admin.png'>"}else{var isFinal = "-"}
+                        
+                        if(data[i].type == "button"){
+                            contentArrayDicoButton.append("<div class='line_new_dico'>"
+                                    +"<div class='td_dico symbol_name'>"+data[i].symbol_name+"</div>"
+                                    +"<div class='td_dico standard_name'>"+data[i].standard_name+"</div>"
+                                    +"<div class='td_dico description'>"+data[i].description+"</div>"
+                                    +"<div class='td_dico photo_link'>"+data[i].photo_link+"</div>"
+                                    +"<div class='td_dico is_safety'>"+isSafety+"</div>"
+                                    +"<div class='td_dico is_enable'>"+isEnable+"</div>"
+                                    +"<div class='td_dico is_cdrh'>"+isCDRH+"</div>"      
+                                    +"<div class='td_dico is_led'>"+isLED+"</div>"
+                                    +"<div class='td_dico is_final'>"+isFinal+"</div>"
+                                    +"<div class='td_dico action'>--</div>"
+                                +"</div>")
+                        }
+                    }
+                    setTimeout(function(){
+                        $(".dico_step2 .entry-bt").addClass("selected");
+                        $(".dico_step2 .dictionary_type_listing.bouton-type").fadeIn(300);
+                        $(".dico_step2").fadeIn(300);
+                    },500)
+                }
+            }
+        });
+        
+        
+        
+        
+        
+    }
 
 });
 

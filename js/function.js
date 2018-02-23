@@ -54,7 +54,27 @@ $(document).ready(function (){
     var globTableCtn = $("#content_toolbox .globTable");
     var FRTLlatGantryCtn = $("#content_toolbox .FRTLlatGantry");
     var latSwitch2Ctn = $("#content_toolbox .latSwitch2");
+    var tsuiSupplyCtn = $("#content_toolbox .tsuiSupply");
+    var FRTLgantryCtn = $("#content_toolbox .FRTLgantry");
+    var unreg5Ctn = $("#content_toolbox .unreg5");
+    var unreg12Ctn = $("#content_toolbox .unreg12");
+    
+    var latLockCtn = $("#content_toolbox .tt_lat_lock");
+    var longLockCtn = $("#content_toolbox .tt_long_lock");
+    var rotationLockCtn = $("#content_toolbox .tt_rotation_lock");
+    var roomLightCtn = $("#content_toolbox .room_light");
+        
+    var arm1Ctn = $("#content_toolbox .l_arm_1");
+    var handleConfSwitchCtn = $("#content_toolbox .handle_config_switch");
+    var arm2Ctn = $("#content_toolbox .l_arm_2");
+    var machineSwaCtn = $("#content_toolbox .machine_swa");
+    var frontalSwaCtn = $("#content_toolbox .frontal_swa");
+    var pivotMotionEnableCtn = $("#content_toolbox .pivot_motion_enable");
+    var tblDriveDownCtn = $("#content_toolbox .tbl_drive_down");
+    var tblDriveUpCtn = $("#content_toolbox .tbl_drive_up");
 
+                        
+                        
     //génération des joysticks
     var joystickContainerNew = $(".joystick_container_new");
     var joystickCalibrationContainer = $(".calibration_zone_container");
@@ -1226,6 +1246,13 @@ $(document).ready(function (){
                                             }
 
                                         }
+                                        if (globalName == "OMEGA") {
+                                            diagInge.find(".switch").each(function(){
+                                                if($(this).hasClass('dim')){
+                                                    $(this).addClass("hidden");
+                                                }
+                                            })                                            
+                                        }
                                         
                                         diagInge.find(".switch").on('click', function () {
                                             var postSignal = "002400806d68d7551407f09b861e3aad000549a844";
@@ -1241,7 +1268,7 @@ $(document).ready(function (){
                                                 var dlcCompletionSignal = "0" + (((onSignal.length) - 8) / 2) + "0006";
 
                                             }
-
+                                            
                                             if ($(this).hasClass("activated")) {
                                                 diagInge.find(".switch img").attr('src', 'images/switch_off.png');
                                                 $(this).removeClass("activated");
@@ -2104,7 +2131,7 @@ $(document).ready(function (){
                             safetyVoltContainer.html(safetyVoltage.toFixed(2));
                             enableFreqContainer.html(enableFrequency);
                             enableVoltContainer.html(enableVoltage.toFixed(2));
-                            supplyContainer.html(globalVoltage.toFixed(2) + " V");
+                            supplyContainer.html(tsuiVoltage.toFixed(2) + " V");
 
                             safetySRTL.html(srtl.substring(0, 1));
                             enableSRTL.html(srtl.substring(1, 2));
@@ -2119,12 +2146,39 @@ $(document).ready(function (){
                         var globGantry = message.globGantry;
                         var sciFRTL = message.sciFRTL;
                         var sciLAT = message.sciLAT;
+                        var tsuiVoltage = message.tsuiv;
+                        var outCtStop = message.outCtStop;
+                        
+                        var globv = message.globv;
+                        var tsuiSupply = message.tsuiSupply;
+                        var FRTLgantry = message.FRTLgantry;
+                        var unreg5 = message.unreg5;
+                        var unreg12 = message.unreg12;
+                        
+                        var latLock = message.latLock;
+                        var longLock = message.longLock;
+                        var rotationLock = message.rotationLock;
+                        var roomLight = message.roomLight;
+                        
+                        if(latLock > 0){latLockCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{latLockCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(longLock > 0){longLockCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{longLockCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(rotationLock > 0){rotationLockCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{rotationLockCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(roomLight > 0){roomLightCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{roomLightCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
                         
                         latSwitch = convertHexaPic(latSwitch) / 51 / 0.138;
                         autoposDR = convertHexaPic(autoposDR) / 51 / 0.138;
                         globGantry = convertHexaPic(globGantry) / 51 / 0.138;
                         sciFRTL = convertHexaPic(sciFRTL) / 51 / 0.138;
                         sciLAT = convertHexaPic(sciLAT) / 51 / 0.138;
+                        tsuiVoltage = (convertHexaPic(tsuiVoltage)+3) / 51 / 0.1375;
+                        
+                        globv = convertHexaPic(globv) / 51 / 0.138;
+                        tsuiSupply = convertHexaPic(tsuiSupply) / 51 / 0.138;
+                        FRTLgantry = convertHexaPic(FRTLgantry) / 51 / 0.138;
+                        unreg5 = convertHexaPic(unreg5) / 51 / 0.37;
+                        unreg12 = convertHexaPic(unreg12) / 51 / 0.175;
+                        
+                        supplyContainer.html(tsuiVoltage.toFixed(2) + " V");
                         
                         
                         latSwitchCtn.find(".value").html(latSwitch.toFixed(2)+ " V");
@@ -2136,7 +2190,12 @@ $(document).ready(function (){
                         sciFRTLCtn.find(".value").html(sciFRTL.toFixed(2)+ " V");
                         if(sciFRTL > seuil){sciFRTLCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{sciFRTLCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
                         sciLATCtn.find(".value").html(sciLAT.toFixed(2)+ " V");
-                        if(sciLAT > seuil){sciLATCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{sciLATCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};                        
+                        if(sciLAT > seuil){sciLATCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{sciLATCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};  
+                        
+                        tsuiSupplyCtn.find(".value").html(tsuiSupply.toFixed(2)+ " V");
+                        FRTLgantryCtn.find(".value").html(FRTLgantry.toFixed(2)+ " V");
+                        unreg5Ctn.find(".value").html(unreg5.toFixed(2)+ " V");
+                        unreg12Ctn.find(".value").html(unreg12.toFixed(2)+ " V");
 
                     
                     }else if(message.typeMsg == "S"){  
@@ -2149,6 +2208,30 @@ $(document).ready(function (){
                         var globTable = message.globTable;
                         var FRTLlatGantry = message.FRTLlatGantry;
                         var latSwitch2 = message.latSwitch2;
+                        var tsuiVoltage = message.tsuiv;
+                        var globv = message.globv;
+                        var tsuiSupply = message.tsuiSupply;
+                        var FRTLgantry = message.FRTLgantry;
+                        var unreg5 = message.unreg5;
+                        var unreg12 = message.unreg12;
+                        
+                        var arm1 = message.arm1;
+                        var handleConfSwitch = message.handleConfSwitch;
+                        var arm2 = message.arm2;
+                        var machineSwa = message.machineSwa;
+                        var frontalSwa = message.frontalSwa;
+                        var pivotMotionEnable = message.pivotMotionEnable;
+                        var tblDriveDown = message.tblDriveDown;
+                        var tblDriveUp = message.tblDriveUp;
+                        
+                        if(arm1 > 0){arm1Ctn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{arm1Ctn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(handleConfSwitch > 0){handleConfSwitchCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{handleConfSwitchCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(arm2 > 0){arm2Ctn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{arm2Ctn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(machineSwa > 0){machineSwaCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{machineSwaCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(frontalSwa > 0){frontalSwaCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{frontalSwaCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(pivotMotionEnable > 0){pivotMotionEnableCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{pivotMotionEnableCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(tblDriveDown > 0){tblDriveDownCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{tblDriveDownCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        if(tblDriveUp > 0){tblDriveUpCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{tblDriveUpCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
                         
                         longEnable = convertHexaPic(longEnable) / 51 / 0.138;
                         TBLtopPan = convertHexaPic(TBLtopPan) / 51 / 0.138;
@@ -2158,6 +2241,15 @@ $(document).ready(function (){
                         globTable = convertHexaPic(globTable) / 51 / 0.138;
                         FRTLlatGantry = convertHexaPic(FRTLlatGantry) / 51 / 0.138;
                         latSwitch2 = convertHexaPic(latSwitch2) / 51 / 0.138;
+                        tsuiVoltage = (convertHexaPic(tsuiVoltage)+3) / 51 / 0.1375;
+                        
+                        globv = convertHexaPic(globv) / 51 / 0.138;
+                        tsuiSupply = convertHexaPic(tsuiSupply) / 51 / 0.138;
+                        FRTLgantry = convertHexaPic(FRTLgantry) / 51 / 0.138;
+                        unreg5 = convertHexaPic(unreg5) / 51 / 0.37;
+                        unreg12 = convertHexaPic(unreg12) / 51 / 0.175;
+                        
+                        supplyContainer.html(tsuiVoltage.toFixed(2) + " V");
                         
                         longEnableCtn.find(".value").html(longEnable.toFixed(2)+ " V");
                         if(longEnable > seuil){longEnableCtn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{longEnableCtn.find(".voyant img").attr('src', 'images/voyant_off.png')};
@@ -2182,6 +2274,13 @@ $(document).ready(function (){
                         
                         latSwitch2Ctn.find(".value").html(latSwitch2.toFixed(2)+ " V");
                         if(latSwitch2 > seuil){latSwitch2Ctn.find(".voyant img").attr('src', 'images/voyant_on.png')}else{latSwitch2Ctn.find(".voyant img").attr('src', 'images/voyant_off.png')};
+                        
+                        tsuiSupplyCtn.find(".value").html(tsuiSupply.toFixed(2)+ " V");
+                        FRTLgantryCtn.find(".value").html(FRTLgantry.toFixed(2)+ " V");
+                        unreg5Ctn.find(".value").html(unreg5.toFixed(2)+ " V");
+                        unreg12Ctn.find(".value").html(unreg12.toFixed(2)+ " V");
+                        
+                        
                         
                     }
                     
@@ -2753,9 +2852,13 @@ $(document).ready(function (){
         $(".display_container").addClass("hidden");
         $(".safety_container").addClass("hidden");
         $(".enable_container").addClass("hidden");        
-        $(".emergency_container").addClass("hidden");  
+        $(".supply_container").addClass("hidden");        
+        $(".emergency_container").addClass("hidden"); 
+        $(".hw_values_container").addClass("hidden");
         $(".hw_signals_container.tssc").addClass("hidden"); 
         $(".hw_signals_container.sbsh").addClass("hidden"); 
+        $(".hw_signal_command_container.sbsh").addClass("hidden"); 
+        $(".hw_signal_command_container.tssc").addClass("hidden"); 
         $(".nodeid_container").addClass("hidden");
         $(".bt_diag_mode").addClass("hidden");   
         
@@ -2772,6 +2875,7 @@ $(document).ready(function (){
         $(".start_elegance_bt").addClass("hidden");  
         $(".start_agila_bt").addClass("hidden"); 
         $(".tsui_restart_bt").addClass("hidden");         
+        $(".master_switch").addClass("hidden");         
         $(".switch_calibration").addClass("hidden");     
         $(".bad_calibration").addClass("hidden");     
         
@@ -2793,46 +2897,52 @@ $(document).ready(function (){
         $(".diag_inge .diag_component").each(function () {
             $(this).remove();
         });    
+        $(".switch.dim").each(function(){
+            $(this).removeClass("hidden");
+        })
+        $(".legend_inge .nodeIDleg").removeClass("hidden");
+        $(".legend_inge .dimleg").removeClass("hidden");
         
         if (globalName == "OMEGA") {       
+            $(".legend_inge .nodeIDleg").addClass("hidden");
+            $(".legend_inge .dimleg").addClass("hidden");
             
             $(".bt_diag_mode").removeClass("hidden");
             $(".enable_container .state").addClass("hidden");
             $(".enable_container .values_freq_volt").addClass("hidden");
             $(".safety_container .state").addClass("hidden");
             $(".safety_container .values_freq_volt").addClass("hidden");
-            
-            
+            $(".switch.dim").each(function(){
+                $(this).addClass("hidden");
+            })
+            $(".hw_values_container").removeClass("hidden");
             if(modelName == "TSSC" ){
                 $(".safety_container .name_container").html("EMERGENCY FUNCTIONS");
                 $(".buzzer_container").removeClass("hidden");
                 $(".display_container").removeClass("hidden");  
                 $(".safety_container").removeClass("hidden");
                 $(".enable_container").removeClass("hidden"); 
-                $(".emergency_container").removeClass("hidden"); 
                 $(".hw_signals_container.tssc").removeClass("hidden");
+                $(".hw_signal_command_container.tssc").removeClass("hidden"); 
+                $(".master_switch").removeClass("hidden");     
                 
-                $(".start_node_bt").removeClass("hidden");
-                $(".stop_node_bt").removeClass("hidden");
                 $(".display_all_bt").removeClass("hidden");
                 $(".stop_all_bt").removeClass("hidden");
                 $(".tsui_restart_bt").removeClass("hidden");                 
                 
             }else{
                 
-                $(".switch_calibration").removeClass("hidden");
-                                
+                $(".switch_calibration").removeClass("hidden");                                
                 $(".enable_container").removeClass("hidden"); 
-                $(".emergency_container").removeClass("hidden"); 
                 $(".hw_signals_container.sbsh").removeClass("hidden");
+                $(".hw_signal_command_container.sbsh").removeClass("hidden"); 
                 
-                $(".start_node_bt").removeClass("hidden");
-                $(".stop_node_bt").removeClass("hidden");
                 $(".display_all_bt").removeClass("hidden");
                 $(".stop_all_bt").removeClass("hidden");
                 $(".tsui_restart_bt").removeClass("hidden");                 
             }
-        }else if(globalName == "ELEGANCE"){            
+        }else if(globalName == "ELEGANCE"){    
+            $(".supply_container").removeClass("hidden");        
             if(modelName == "TSSC" ){
                 //left
                 $(".buzzer_container").removeClass("hidden");
@@ -3770,6 +3880,10 @@ $(document).ready(function (){
                 if (currType == "led" || currType == "display") {
                     console.log("send signal " + currType);
                     sendSignal(currSignalStop)
+                }else if(currType == "led_spe"){
+                    sendSignal("002400806d68d7551407f09b861e3aad000549a844050000" + cobID2 + "2F00300144000000");
+                    sendSignal("002400806d68d7551407f09b861e3aad000549a844050000" + cobID2 + "2F00300257000000");
+                    sendSignal("002400806d68d7551407f09b861e3aad000549a844050000" + cobID2 + "2F0030034E000000");
                 }
                 nextStepFinal("fail");
             } else {
@@ -4130,7 +4244,7 @@ $(document).ready(function (){
             if(initial_enable_freq == 0){var testResultInitialEnableFreq = "Pass"}else{var testResultInitialEnableFreq = "Fail"}
             if(initial_enable_tens == 0){var testResultInitialEnableTens = "Pass"}else{var testResultInitialEnableTens = "Fail"}
             if(initial_safety_freq >= 1800 && initial_safety_freq <= 2200){var testResultInitialSafetyFreq = "Pass"}else{var testResultInitialSafetyFreq = "Fail"}
-            if(initial_safety_tens >= 22.6 && initial_safety_tens <= 26.4){var testResultInitialSafetyTens = "Pass"}else{var testResultInitialSafetyTens = "Fail"}
+            if(initial_safety_tens >= 21.6 && initial_safety_tens <= 26.4){var testResultInitialSafetyTens = "Pass"}else{var testResultInitialSafetyTens = "Fail"}
             if(initial_enable_srtl == 0 ){var testInitialSRTLenable = "Pass"}else{var testInitialSRTLenable = "Fail"}
             if(initial_safety_srtl == 0 ){var testInitialSRTLsafety = "Pass"}else{var testInitialSRTLsafety = "Fail"}
             
@@ -4138,7 +4252,7 @@ $(document).ready(function (){
                 + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_freq+"Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialEnableFreq+"</span></div>"
                 + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Enable Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_enable_tens+"V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>0V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialEnableTens+"</span></div>"
                 + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Frequency</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_freq+"Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>1800Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>2200Hz</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialSafetyFreq+"</span></div>"
-                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_tens+"V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>22.6V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>26.4V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialSafetyTens+"</span></div>";
+                + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Safety Voltage</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+initial_safety_tens+"V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>21.6V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>26.4V</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+testResultInitialSafetyTens+"</span></div>";
         }else{
             lineInitial = "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'><b>Type</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Value</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Required Value</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Pass/Fail</b></span></div>"
             + "<div><span style='display:inline-block;vertical-align:top;width:150px;margin-left:5px;'>Test SRTL</span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'>"+SRTLfinalTesttxt+"</span></div>"
@@ -4159,7 +4273,7 @@ $(document).ready(function (){
                 + "<h3>INITIAL STATES</h3><div>"
                 + "<div>"+lineInitial+"</div>"
                 + "<h3>BUTTONS</h3>"
-                + "<h5>Test is PASS when CAN signal press is present and CAN signal release is present.<br>When tested entry is Enable, test is PASS if measured values are between 1800Hz-2200Hz and 22.6V-26.4V.<b>If SRTL is active and tested entry is Enable, test is PASS if measured bit is 1 for press and 0 for release.</h5>"
+                + "<h5>Test is PASS when CAN signal press is present and CAN signal release is present.<br>When tested entry is Enable, test is PASS if measured values are between 1800Hz-2200Hz and 21.6V-26.4V.<b>If SRTL is active and tested entry is Enable, test is PASS if measured bit is 1 for press and 0 for release.</h5>"
                 + "<div><span style='display:inline-block;vertical-align:top;width:75px;margin-left:5px;'><b>Name</b></span><span style='display:inline-block;vertical-align:top;width:75px;margin-left:5px;'><b>Ref. TST</b></span><span style='display:inline-block;vertical-align:top;width:75px;margin-left:5px;'><b>Action</b></span><span style='display:inline-block;vertical-align:top;width:100px;margin-left:5px;'><b>Test Result</b></span><span style='display:inline-block;vertical-align:top;width:120px;margin-left:5px;'><b>Measure</b></span><span style='display:inline-block;vertical-align:top;width:50px;margin-left:5px;'><b>Enable</b></span><span style='display:inline-block;vertical-align:top;width:50px;margin-left:5px;'><b>CDRH</b></span></div>"
                 + "<div>" +lineButton+"</div>"
                 + "<h3>EMERGENCY STOP (SAFETY LOOP)</h3>"
@@ -5443,6 +5557,9 @@ $(document).ready(function (){
         } else {
             setTimeout(function () {
                 stopDownload(canId);
+                 setTimeout(function(){
+                    getInfoCard(globalName, cobID2);
+                },1000)
             }, 500);
 
         }
@@ -5479,6 +5596,9 @@ $(document).ready(function (){
         } else {
             setTimeout(function () {
                 console.log("stopDownload End of file");
+                 setTimeout(function(){
+                    getInfoCard(globalName, cobID2);
+                },1000)
             }, 500);
         }
     }
@@ -5492,6 +5612,9 @@ $(document).ready(function (){
         isDownloading = 0;
         $(".downloading_bar_container").addClass("hidden");
         sendSignal(Cal_post + Cal_dlc + canId + "2f511f0101000000");
+         setTimeout(function(){
+            getInfoCard(globalName, cobID2);
+        },1000)
         //sendSignal("002400806d68d7551407f09b861e3aad000549a8440800000000072d2f511f0101000000");
     }
     //fin du download Omega
@@ -5523,6 +5646,9 @@ $(document).ready(function (){
         console.log("send app_run");
         sendSignalDownloadOmega(postSignalOmega + app_run);
 
+        setTimeout(function(){
+            getInfoCard(globalName, cobID2);
+        },1000)
 
     }
 
@@ -6245,25 +6371,6 @@ $(document).ready(function (){
     $(".start_elegance_bt").on('click', function () {
         sendSignal("002400806d68d7551407f09b861e3aad000549a844080000" + cobID2 + "2F01300102000000");
     });
-    $(".bt_diag_mode .diag_mod_on").on('click', function(){
-        if(modelName == "TSSC"){
-            sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c0226100000000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c6226100000000000000000");
-
-       }else{
-           sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c0426100000000000000000");
-            sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c6426100000000000000000");
-       }
-    });
-    $(".bt_diag_mode .diag_mod_off").on('click', function(){
-        if(modelName == "TSSC"){
-            sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2226100000000000000000");
-            setTimeout(function(){sendSignal(startSlaveTSSC);},9000);            
-       }else{
-            sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2426100000000000000000");
-            setTimeout(function(){sendSignal(startSlaveSBSH);sendSignal(startSlaveSBSH2);},9000); 
-       }
-    });
     
     $(".change_nodeid").on('click', function () {
         var value = $("#value_nodeid").html().trim();
@@ -6321,21 +6428,54 @@ $(document).ready(function (){
             $(this).removeClass('activated');
             $(this).find('img').attr('src','images/switch_off.png');
         })
+        $(".switch_hw").each(function(){
+            $(this).removeClass('activated');
+            $(this).find('img').attr('src','images/switch_off.png');
+        })
         $("#content_toolbox .diag_inge .joystick_show").fadeOut(300);
         $("#content_toolbox .diag_inge .led_show").fadeOut(300);
         setTimeout(function () {
             $("#content_toolbox .diag_inge .button_show").fadeIn(300);
         }, 300);
         if(globalName == "OMEGA" && modelName =="TSSC"){
-            sendSignalPic("7");
+            sendSignalPic("7");            
+            sendSignalPic("DP");
+            if($(".bt_diag_mode .switch_diag_mod").hasClass("activated")){
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2226100000000000000000");
+                setTimeout(function(){
+                    sendSignal(startSlaveTSSC);
+                },9000); 
+                $(".bt_diag_mode .switch_diag_mod").removeClass("activated");
+                $(".bt_diag_mode .switch_diag_mod").find("img").attr("src", "images/switch_off.png");
+            }               
         }else if(globalName == "OMEGA" && modelName =="SMARTBOX"){
             sendSignalPic("9");        
+            sendSignalPic("D`");
+            sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2426100000000000000000");
+            setTimeout(function(){
+                sendSignal(startSlaveSBSH);
+                sendSignal(startSlaveSBSH2);
+            },9000); 
+            $(".bt_diag_mode .switch_diag_mod").removeClass("activated");
+           $(".bt_diag_mode .switch_diag_mod").find("img").attr("src", "images/switch_off.png");
         }else if(globalName == "OMEGA" && modelName =="SMARTHANDLE"){
             sendSignalPic("9");
+            sendSignalPic("DP");
+            if($(".bt_diag_mode .switch_diag_mod").hasClass("activated")){
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2426100000000000000000");
+                setTimeout(function(){
+                    sendSignal(startSlaveSBSH);
+                    sendSignal(startSlaveSBSH2);
+                },9000);                
+                $(".bt_diag_mode .switch_diag_mod").find("img").attr("src", "images/switch_off.png");
+                $(".bt_diag_mode .switch_diag_mod").removeClass("activated");
+            }
+            
         }
         else{
             sendSignalPic("2");
         }
+        
     });
     $("#content_toolbox .show_led").on('click', function () {
         $("#content_toolbox .diag_inge .joystick_show").fadeOut(300);
@@ -6346,6 +6486,7 @@ $(document).ready(function (){
         
         if(globalName == "OMEGA" && modelName =="TSSC"){
             sendSignalPic("6");
+            
         }else if(globalName == "OMEGA" && modelName =="SMARTBOX"){
             sendSignalPic("8");        
         }else if(globalName == "OMEGA" && modelName =="SMARTHANDLE"){
@@ -6355,6 +6496,7 @@ $(document).ready(function (){
             sendSignalPic("1");
         }
     });
+
     $("#content_toolbox .get_conf_inge").on('click', function () {
         setTimeout(function () {
             _MODE = "TOOLBOX";
@@ -6491,6 +6633,59 @@ $(document).ready(function (){
         _MODE = "START";
         if($(this).hasClass("repair_mode") || $(this).hasClass("manufacturing_mode")){
             resetDisplayCalibration(hasServiceBt, switchPosNumber);
+        }else if($(this).hasClass("inge_mode")){            
+            stopAllLED(globalName, modelName, typeChoice);
+            $(".switch").each(function(){
+                $(this).removeClass('activated');
+                $(this).find('img').attr('src','images/switch_off.png');
+            })
+            $(".switch_hw").each(function(){
+                $(this).removeClass('activated');
+                $(this).find('img').attr('src','images/switch_off.png');
+            })
+            $("#content_toolbox .diag_inge .joystick_show").fadeOut(300);
+            $("#content_toolbox .diag_inge .led_show").fadeOut(300);
+            setTimeout(function () {
+                $("#content_toolbox .diag_inge .button_show").fadeIn(300);
+            }, 300);
+            if(globalName == "OMEGA" && modelName =="TSSC"){
+                sendSignalPic("7");            
+                sendSignalPic("DP");
+                if($(".bt_diag_mode .switch_diag_mod").hasClass("activated")){
+                    sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2226100000000000000000");
+                    setTimeout(function(){
+                        sendSignal(startSlaveTSSC);
+                    },9000); 
+                    $(".bt_diag_mode .switch_diag_mod").removeClass("activated");
+                    $(".bt_diag_mode .switch_diag_mod").find("img").attr("src", "images/switch_off.png");
+                }               
+            }else if(globalName == "OMEGA" && modelName =="SMARTBOX"){
+                sendSignalPic("9");        
+                sendSignalPic("D`");
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2426100000000000000000");
+                setTimeout(function(){
+                    sendSignal(startSlaveSBSH);
+                    sendSignal(startSlaveSBSH2);
+                },9000); 
+                $(".bt_diag_mode .switch_diag_mod").removeClass("activated");
+               $(".bt_diag_mode .switch_diag_mod").find("img").attr("src", "images/switch_off.png");
+            }else if(globalName == "OMEGA" && modelName =="SMARTHANDLE"){
+                sendSignalPic("9");
+                sendSignalPic("DP");
+                if($(".bt_diag_mode .switch_diag_mod").hasClass("activated")){
+                    sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2426100000000000000000");
+                    setTimeout(function(){
+                        sendSignal(startSlaveSBSH);
+                        sendSignal(startSlaveSBSH2);
+                    },9000);                
+                    $(".bt_diag_mode .switch_diag_mod").find("img").attr("src", "images/switch_off.png");
+                    $(".bt_diag_mode .switch_diag_mod").removeClass("activated");
+                }
+
+            }
+            else{
+                sendSignalPic("2");
+            }
         }
     });
     $(".exit_role").on('click', function(){
@@ -6505,6 +6700,65 @@ $(document).ready(function (){
     $(".bt_section.history").on('click', function(){
         $(".content_history_table").empty();
         modeManufacturing = 0;
+    });
+    
+    $(".hw_signal_command_container .switch_hw").on('click', function(){
+        var on_signal = $(this).data('on');
+        var off_signal = $(this).data('off');
+        
+        if($(this).hasClass('activated')){
+            $(this).removeClass("activated");
+            $(this).find("img").attr('src', 'images/switch_off.png');
+            sendSignalPic(off_signal);
+        }else{
+            $(".switch_hw").each(function(){
+                $(this).removeClass('activated');
+                $(this).find('img').attr('src','images/switch_off.png');
+            })
+            $(this).addClass("activated");
+            $(this).find("img").attr('src', 'images/switch_on.png');
+            sendSignalPic(on_signal);
+        }
+    });
+    $(".master_switch .switch_mast").on('click', function(){
+        var on_signal = "DA";        
+        var off_signal = "D@";
+        
+        if($(this).hasClass('activated')){
+            $(this).removeClass("activated");
+            $(this).find("img").attr('src', 'images/switch_off.png');
+            sendSignalPic(off_signal);
+            sendSignal("002400806d68d7551407f09b861e3aad000549a8440800001fc20f000e00000000000000");
+        }else{           
+            $(this).addClass("activated");
+            $(this).find("img").attr('src', 'images/switch_on.png');
+            sendSignalPic(on_signal);
+            sendSignal("002400806d68d7551407f09b861e3aad000549a8440800001fc22f000e00000000000000");
+        }
+    });
+    $(".bt_diag_mode .switch_diag_mod").on('click', function(){        
+        if($(this).hasClass('activated')){
+            $(this).removeClass("activated");
+            $(this).find("img").attr('src', 'images/switch_off.png');            
+            if(modelName == "TSSC"){
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2226100000000000000000");
+                setTimeout(function(){sendSignal(startSlaveTSSC);},9000);            
+            }else{
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c2426100000000000000000");
+                setTimeout(function(){sendSignal(startSlaveSBSH);sendSignal(startSlaveSBSH2);},9000); 
+            }
+        }else{            
+            $(this).addClass("activated");
+            $(this).find("img").attr('src', 'images/switch_on.png');
+            if(modelName == "TSSC"){
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c0226100000000000000000");
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c6226100000000000000000");
+
+            }else{
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c0426100000000000000000");
+                sendSignal("002400806d68d7551407f09b861e3aad000549a8440000000c6426100000000000000000");
+            }
+        }
     });
     
     function stopAllLED(globalName, modelName, typeChoice){
@@ -6534,6 +6788,8 @@ $(document).ready(function (){
             }
         }
     }
+    
+    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////// SEND SIGNAL TO DRIVER ////////////////////////////////////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
