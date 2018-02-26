@@ -2818,7 +2818,7 @@ $(document).ready(function (){
         $("#content_home .information_finaltest").addClass("hidden");
         $(".head_userinfo").addClass("hidden");
         $("#content_homeE .information").addClass("hidden");
-        
+        $(".testing_upl .content_upl").html("");
         //reset finaltest
         
         $(".instructions_testfinal").removeClass("hidden");
