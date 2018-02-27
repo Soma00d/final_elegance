@@ -5331,7 +5331,11 @@ $(document).ready(function (){
                                     }else {
                                         var unicIDlsb = "-";
                                     }
-                                    unicID = unicIDmsb + unicIDlsb;
+                                    if(unicIDmsb == "-" || unicIDlsb == "-"){
+                                        unicID = "-";
+                                    }else{
+                                        unicID = unicIDmsb + unicIDlsb;
+                                    }                                    
                                 }, 200);
                             }, 200);
                         }, 200);
@@ -5647,7 +5651,7 @@ $(document).ready(function (){
         sendSignal(Cal_post + Cal_dlc + canId + "2f511f0101000000");
          setTimeout(function(){
             getInfoCard(globalName, cobID2);
-        },1000)
+        },5000)
         //sendSignal("002400806d68d7551407f09b861e3aad000549a8440800000000072d2f511f0101000000");
     }
     //fin du download Omega
@@ -5681,7 +5685,7 @@ $(document).ready(function (){
 
         setTimeout(function(){
             getInfoCard(globalName, cobID2);
-        },1000)
+        },5000)
 
     }
 
