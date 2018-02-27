@@ -2819,7 +2819,7 @@ $(document).ready(function (){
         $(".head_userinfo").addClass("hidden");
         $("#content_homeE .information").addClass("hidden");
         $(".testing_upl .content_upl").html("");
-		$(".start_download").addClass("hidden");
+        $(".start_download").addClass("hidden");
         $(".stop_download").addClass("hidden");
         //reset finaltest
         
@@ -2863,6 +2863,10 @@ $(document).ready(function (){
         $(".hw_signal_command_container.tssc").addClass("hidden"); 
         $(".nodeid_container").addClass("hidden");
         $(".bt_diag_mode").addClass("hidden");   
+        
+        $('#fileinput4').val(""); 
+        $('#fileinput5').val(""); 
+        
         
         $(".safety_container .name_container").html("SAFETY LOOP");
         $(".enable_container .state").removeClass("hidden");
@@ -5252,6 +5256,9 @@ $(document).ready(function (){
     $(".continue_to_finaltest").on('click', function () {
         sendSignal(Cal_post + Cal_dlc + cobID2 + "2f00550101000000");
         FWcalibV = $(".sw_config").html();
+        $(".verify_calibration").removeClass("hidden");
+        $(".stop_calibration_verif").addClass("hidden");
+        clearInterval(intervalVerify);
         getCalibrationLog();
     });
     
@@ -5287,19 +5294,39 @@ $(document).ready(function (){
             case "ELEGANCE":
                 pingTSSC(Cal_post + Cal_dlc + id + "4018100300000000", id);
                 setTimeout(function () {
-                    bootRelease = finalResponseData;
+                    if(finalResponseData.substring(6, 8)== "03") {
+                        bootRelease = finalResponseData.substring(8, 16);
+                    }else{
+                        bootRelease = "-";
+                    }
                     pingTSSC(Cal_post + Cal_dlc + id + "4018100400000000", id);
                     setTimeout(function () {
-                        FPGARelease = finalResponseData;
+                        if(finalResponseData.substring(6, 8)== "04") {
+                            FPGARelease = finalResponseData.substring(8, 16);
+                        }else{
+                            FPGARelease = "-";
+                        }
                         pingTSSC(Cal_post + Cal_dlc + id + "4018100700000000", id);
                         setTimeout(function () {
-                            softwareRelease = finalResponseData;
+                            if(finalResponseData.substring(6, 8)== "07") {
+                                softwareRelease = finalResponseData.substring(8, 16);
+                            }else{
+                                softwareRelease = "-";
+                            }
                             pingTSSC(Cal_post + Cal_dlc + id + "4018100500000000", id);
                             setTimeout(function () {
-                                var unicIDmsb = finalResponseData;
+                                if(finalResponseData.substring(6, 8)== "05"){
+                                    var unicIDmsb = finalResponseData.substring(8, 16);
+                                }else{
+                                    var unicIDmsb = "-";
+                                }                                
                                 pingTSSC(Cal_post + Cal_dlc + id + "4018100600000000", id);
                                 setTimeout(function () {
-                                    var unicIDlsb = finalResponseData;
+                                    if(finalResponseData.substring(6, 8)== "06"){
+                                        var unicIDlsb = finalResponseData.substring(8, 16);
+                                    }else {
+                                        var unicIDlsb = "-";
+                                    }
                                     unicID = unicIDmsb + unicIDlsb;
                                 }, 200);
                             }, 200);
@@ -5384,7 +5411,7 @@ $(document).ready(function (){
     }
     function pingTSSC(signal, id) {
         sendSignal(signal);
-        waitCalibResponse = cobID1;
+        waitPingResponse = cobID1;
     }
     function pingTSSComega(signal, id) {
         sendSignal(signal);
