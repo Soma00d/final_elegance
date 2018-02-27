@@ -3025,6 +3025,10 @@ $(document).ready(function (){
             $(this).removeClass("test_ok");
             $(this).removeClass("test_fail");
         })
+        
+        $(".statut_calibration_verif").addClass("hidden");
+        $(".statut_calibration_verif .content").empty();
+        
         if(hasServiceBt == 0 && switchPosNumber == 0){
             $(".calibration_step_2").removeClass("hidden");
             $(".calibration_step_1").addClass("hidden");
@@ -4860,7 +4864,7 @@ $(document).ready(function (){
             $(".statut_calibration_verif").removeClass("hidden");
             $(".statut_calibration_verif").find(".id" + identifier + "").remove();
             
-            $(".statut_calibration_verif").append("<div class='line_validate_calib id" + identifier + "'><img class='check_calib' src='images/check.png'>Joystick "+nameJo+" is now calibrated</div>");
+            $(".statut_calibration_verif .content").append("<div class='line_validate_calib id" + identifier + "'><img class='check_calib' src='images/check.png'>Joystick "+nameJo+" is now calibrated</div>");
 
             setTimeout(function () {
                 var count = $("#content_calibration .calibration_zone_container .bloc_calibrate").length;
@@ -5327,7 +5331,11 @@ $(document).ready(function (){
                                     }else {
                                         var unicIDlsb = "-";
                                     }
-                                    unicID = unicIDmsb + unicIDlsb;
+                                    if(unicIDmsb == "-" || unicIDlsb == "-"){
+                                        unicID = "-";
+                                    }else{
+                                        unicID = unicIDmsb + unicIDlsb;
+                                    }                                    
                                 }, 200);
                             }, 200);
                         }, 200);
